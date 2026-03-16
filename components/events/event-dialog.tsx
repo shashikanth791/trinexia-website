@@ -22,6 +22,11 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
 
   const Icon = event.icon
 
+  function handleRegisterClick(e: React.MouseEvent) {
+    e.stopPropagation()
+    onRegister()
+  }
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose() }}>
       <DialogContent className="max-w-lg glass-card backdrop-blur-xl">
@@ -82,10 +87,10 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             </ul>
           </div>
 
-          {/* Register CTA — opens the separate RegisterDialog */}
+          {/* Register CTA */}
           <Button
             className="w-full bg-foreground text-background hover:bg-foreground/90"
-            onClick={onRegister}
+            onClick={handleRegisterClick}
           >
             Register for this Event
           </Button>

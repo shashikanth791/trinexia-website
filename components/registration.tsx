@@ -105,46 +105,50 @@ export function Registration() {
                 />
               </div>
 
-              {/* Email & Phone */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground">
-                    Email <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    required
-                    placeholder="you@example.com"
-                    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-foreground">
-                    Phone Number <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    required
-                    placeholder="+91 98765 43210"
-                    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-                  />
-                </div>
-              </div>
+              {/* Registration Info */}
+<div className="grid md:grid-cols-3 gap-6">
 
-              {/* College */}
-              <div className="space-y-2">
-                <Label htmlFor="college" className="text-foreground">
-                  College Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="college"
-                  required
-                  placeholder="Enter your college name"
-                  className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-                />
-              </div>
+  {/* Registration Number */}
+  <div className="space-y-2">
+    <Label htmlFor="regno" className="text-foreground">
+      Registration Number <span className="text-destructive">*</span>
+    </Label>
+    <Input
+      id="regno"
+      required
+      placeholder="Enter your registration number"
+      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+    />
+  </div>
+
+  {/* Section */}
+  <div className="space-y-2">
+    <Label htmlFor="section" className="text-foreground">
+      Section <span className="text-destructive">*</span>
+    </Label>
+    <Input
+      id="section"
+      required
+      placeholder="Example: CSE-A"
+      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+    />
+  </div>
+
+  {/* Phone */}
+  <div className="space-y-2">
+    <Label htmlFor="phone" className="text-foreground">
+      Phone Number <span className="text-destructive">*</span>
+    </Label>
+    <Input
+      id="phone"
+      type="tel"
+      required
+      placeholder="+91 98765 43210"
+      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+    />
+  </div>
+
+</div>
 
               {/* Event Selection */}
               <div className="space-y-2">

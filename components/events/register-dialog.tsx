@@ -14,11 +14,18 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2, Loader2, UserPlus, X } from "lucide-react"
 import type { Event } from "./event-data"
 
-// ─────────────────────────────────────────────────────────────
-// 🔌 Replace with your deployed Google Apps Script Web App URL
-// ─────────────────────────────────────────────────────────────
 const GOOGLE_SHEETS_URL =
-  "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
+  "https://script.google.com/macros/s/AKfycbyDXRoawEgGTQagYdKD8smHBvhrNutEjPb9PtR6VuExIMJkG0N3vrmfOpbp2xdAmzXbKg/exec"
+
+const EVENT_CODES: Record<string, string> = {
+  "Technical Rapid Fire": "RFR",
+  "Debugging": "DBG",
+  "Tech Debate": "DEB",
+  "Ideathon": "IDT",
+  "BGMI Tournament": "BGM",
+  "Free Fire MAX": "FFM",
+  "Smash Karts": "SKT",
+}
 
 interface RegisterDialogProps {
   event: Event | null
@@ -26,17 +33,24 @@ interface RegisterDialogProps {
   onClose: () => void
 }
 
+interface TeamMember {
+  name: string
+  regno: string
+}
+
 interface FormState {
   name: string
-  Section: string
+  regno: string
+  section: string
   phone: string
-  teamMembers: string[]
+  teamMembers: TeamMember[]
   upiRef: string
 }
 
 const emptyForm = (): FormState => ({
   name: "",
-  Section: "",
+  regno: "",
+  section: "",
   phone: "",
   teamMembers: [],
   upiRef: "",
@@ -50,11 +64,13 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
   const [form, setForm] = useState<FormState>(emptyForm())
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
+  const [trinexiaId, setTrinexiaId] = useState("")
 
   function handleClose() {
     setForm(emptyForm())
     setStatus("idle")
     setErrorMsg("")
+    setTrinexiaId("")
     onClose()
   }
 
@@ -65,7 +81,7 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
   function addMember() {
     if (!event) return
     if (form.teamMembers.length < maxExtraMembers(event)) {
-      setField("teamMembers", [...form.teamMembers, ""])
+      setField("teamMembers", [...form.teamMembers, { name: "", regno: "" }])
     }
   }
 
@@ -73,9 +89,9 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
     setField("teamMembers", form.teamMembers.filter((_, i) => i !== index))
   }
 
-  function updateMember(index: number, value: string) {
+  function updateMember(index: number, field: keyof TeamMember, value: string) {
     const updated = [...form.teamMembers]
-    updated[index] = value
+    updated[index] = { ...updated[index], [field]: value }
     setField("teamMembers", updated)
   }
 
@@ -86,29 +102,33 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
     setStatus("loading")
     setErrorMsg("")
 
-    const payload = {
-      eventName: event.name,
-      name: form.name,
-      Section: form.Section,
-      phone: form.phone,
-      teamMembers: form.teamMembers.filter((m) => m.trim() !== "").join(", "),
-      upiRef: form.upiRef,
-      submittedAt: new Date().toISOString(),
-    }
-
     try {
-      const body = new URLSearchParams(
-        Object.entries(payload).map(([k, v]) => [k, String(v)])
-      )
+      const code = EVENT_CODES[event.name] ?? "EVT"
+      const timestamp = Date.now()
+      const generatedId = `TN-${code}-${timestamp}`
 
-      const res = await fetch(GOOGLE_SHEETS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      const params = new URLSearchParams({
+        trinexiaId: generatedId,
+        eventName: event.name,
+        eventCode: code,
+        name: form.name,
+        regno: form.regno,
+        section: form.section,
+        phone: form.phone,
+        teamMembers: form.teamMembers
+          .filter((m) => m.name.trim() !== "")
+          .map((m) => `${m.name} (${m.regno})`)
+          .join(", "),
+        upiRef: form.upiRef,
+        submittedAt: new Date().toISOString(),
       })
 
-      if (!res.ok) throw new Error(`Server error: ${res.status}`)
+      await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
+        method: "GET",
+        mode: "no-cors",
+      })
 
+      setTrinexiaId(generatedId)
       setStatus("success")
     } catch (err: unknown) {
       setStatus("error")
@@ -126,9 +146,13 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose() }}>
-      <DialogContent className="max-w-md glass-card backdrop-blur-xl">
+      <DialogContent className="max-w-md glass-card backdrop-blur-xl max-h-[90vh] overflow-y-auto">
         {status === "success" ? (
-          <SuccessScreen eventName={event.name} onClose={handleClose} />
+          <SuccessScreen
+            eventName={event.name}
+            trinexiaId={trinexiaId}
+            onClose={handleClose}
+          />
         ) : (
           <>
             <DialogHeader>
@@ -144,7 +168,8 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-              {/* Name */}
+
+              {/* Leader Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="reg-name" className="text-sm text-foreground/80">
                   Your Name <Required />
@@ -159,19 +184,34 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 />
               </div>
 
-              {/* Section */}
-              <div className="space-y-1.5">
-                <Label htmlFor="reg-section" className="text-sm text-foreground/80">
-                  Section <Required />
-                </Label>
-                <Input
-                  id="reg-section"
-                  placeholder="Your section"
-                  value={form.Section}
-                  onChange={(e) => setField("Section", e.target.value)}
-                  required
-                  className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                />
+              {/* Reg No + Section */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-regno" className="text-sm text-foreground/80">
+                    Reg. Number <Required />
+                  </Label>
+                  <Input
+                    id="reg-regno"
+                    placeholder="e.g. 22BCS001"
+                    value={form.regno}
+                    onChange={(e) => setField("regno", e.target.value)}
+                    required
+                    className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-section" className="text-sm text-foreground/80">
+                    Section <Required />
+                  </Label>
+                  <Input
+                    id="reg-section"
+                    placeholder="e.g. CSE-A"
+                    value={form.section}
+                    onChange={(e) => setField("section", e.target.value)}
+                    required
+                    className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
+                  />
+                </div>
               </div>
 
               {/* Phone */}
@@ -190,7 +230,7 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 />
               </div>
 
-              {/* Dynamic team members — only shown for team events */}
+              {/* Team Members */}
               {extraMax > 0 && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -220,21 +260,31 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
 
                   <div className="space-y-2">
                     {form.teamMembers.map((member, i) => (
-                      <div key={i} className="flex items-center gap-2">
+                      <div key={i} className="glass-card rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-medium text-foreground/70">
+                            Member {i + 2}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => removeMember(i)}
+                            className="text-muted-foreground hover:text-destructive transition-colors"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                         <Input
-                          placeholder={`Member ${i + 2} name`}
-                          value={member}
-                          onChange={(e) => updateMember(i, e.target.value)}
-                          className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30 flex-1"
+                          placeholder="Full name"
+                          value={member.name}
+                          onChange={(e) => updateMember(i, "name", e.target.value)}
+                          className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
                         />
-                        <button
-                          type="button"
-                          onClick={() => removeMember(i)}
-                          className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded"
-                          aria-label="Remove member"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
+                        <Input
+                          placeholder="Reg. Number (e.g. 22BCS002)"
+                          value={member.regno}
+                          onChange={(e) => updateMember(i, "regno", e.target.value)}
+                          className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
+                        />
                       </div>
                     ))}
                   </div>
@@ -292,9 +342,11 @@ function Required() {
 
 function SuccessScreen({
   eventName,
+  trinexiaId,
   onClose,
 }: {
   eventName: string
+  trinexiaId: string
   onClose: () => void
 }) {
   return (
@@ -312,6 +364,17 @@ function SuccessScreen({
           We&apos;ll reach out with further details soon.
         </p>
       </div>
+
+      <div className="glass-card rounded-xl px-6 py-4 w-full border border-foreground/10">
+        <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
+          Your TriNexia Team ID
+        </p>
+        <p className="font-mono text-2xl font-bold text-accent">{trinexiaId}</p>
+        <p className="text-xs text-muted-foreground mt-2">
+          📋 Save this ID — you&apos;ll need it at event check-in
+        </p>
+      </div>
+
       <Button
         onClick={onClose}
         variant="outline"

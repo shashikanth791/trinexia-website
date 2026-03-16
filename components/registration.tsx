@@ -122,26 +122,15 @@ export function Registration() {
   </div>
 
   {/* Section */}
-  <div className="space-y-2">
-    <Label htmlFor="section" className="text-foreground">
-      Section <span className="text-destructive">*</span>
-    </Label>
-    <Input
-      id="section"
-      required
-      placeholder="Example: CSE-A"
-      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-    />
-  </div>
-  <div className="space-y-2">
-  <Label htmlFor="regno">
-    Registration Number *
+<div className="space-y-2">
+  <Label htmlFor="section" className="text-foreground">
+    Section <span className="text-destructive">*</span>
   </Label>
-
   <Input
-    id="regno"
+    id="section"
     required
-    placeholder="Enter your college registration number"
+    placeholder="Example: CSE-A"
+    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
   />
 </div>
 

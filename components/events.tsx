@@ -5,27 +5,16 @@ import { Code, Gamepad2 } from "lucide-react"
 import { events, type Event } from "./events/event-data"
 import { EventCard } from "./events/event-card"
 import { EventDialog } from "./events/event-dialog"
-import { RegisterDialog } from "./events/register-dialog"
 
 export function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
-  const [showRegisterDialog, setShowRegisterDialog] = useState(false)
 
   function handleCardClick(event: Event) {
     setSelectedEvent(event)
   }
 
-  function handleRegisterClick() {
-    setShowRegisterDialog(true)
-  }
-
   function handleEventDialogClose() {
     setSelectedEvent(null)
-    setShowRegisterDialog(false)
-  }
-
-  function handleRegisterDialogClose() {
-    setShowRegisterDialog(false)
   }
 
   const technicalEvents = events.filter((e) => e.category === "technical")
@@ -85,19 +74,11 @@ export function Events() {
         </div>
       </div>
 
-      {/* Step 1 — Event Details */}
+      {/* Event Details Dialog */}
       <EventDialog
         event={selectedEvent}
-        open={!!selectedEvent && !showRegisterDialog}
+        open={!!selectedEvent}
         onClose={handleEventDialogClose}
-        onRegister={handleRegisterClick}
-      />
-
-      {/* Step 2 — Registration Form */}
-      <RegisterDialog
-        event={selectedEvent}
-        open={showRegisterDialog}
-        onClose={handleRegisterDialogClose}
       />
     </section>
   )

@@ -18,31 +18,27 @@ export function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Animated Background Elements */}
-<div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-[200px]"></div>
+        <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[200px]"></div>
+      </div>
 
-  {/* Blue Glow */}
-  <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-[200px]"></div>
+      {/* Grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }}
+      />
 
-  {/* Purple Glow */}
-  <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[200px]"></div>
-
-</div>
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px",
-          }}
-        />
-        
-        {/* Gradient orbs */}
-        <div
-          className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-accent/10 blur-[120px] transition-opacity duration-1000 ${
-            mounted ? "opacity-100" : "opacity-0"
-          }`}
-        />
+      {/* Gradient orbs */}
+      <div
+        className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-accent/10 blur-[120px] transition-opacity duration-1000 ${
+          mounted ? "opacity-100" : "opacity-0"
+        }`}
+      />
       <div
         className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-foreground/5 blur-[100px] transition-opacity duration-1000 delay-300 ${
           mounted ? "opacity-100" : "opacity-0"
@@ -60,7 +56,7 @@ export function Hero() {
           >
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span className="text-sm text-muted-foreground tracking-wide">
-              April 2026 — College Campus
+              April 8, 2026 — Vignan University Hyderabad Campus
             </span>
           </div>
 
@@ -91,13 +87,13 @@ export function Hero() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            Join TriNexia 2026 and compete in exciting technical challenges and gaming tournaments. 
-             Show your skills, innovate, and battle it out for glory.
+            Join TriNexia 2026 and compete in exciting technical challenges and gaming tournaments.
+            Show your skills, innovate, and battle it out for glory.
           </p>
 
-          {/* CTA Buttons */}
+          {/* CTA Button */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-400 ${
+            className={`flex items-center justify-center transition-all duration-700 delay-400 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
@@ -107,14 +103,6 @@ export function Hero() {
               className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-medium rounded-lg transition-all duration-300 hover:scale-105"
             >
               <Link href="#events">Explore Events</Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="glass-card glass-hover border-border/50 px-8 py-6 text-base font-medium text-foreground rounded-lg"
-            >
-              <Link href="#register">Register Now</Link>
             </Button>
           </div>
 

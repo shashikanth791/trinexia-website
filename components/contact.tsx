@@ -49,9 +49,9 @@ export function Contact() {
                   Event Venue
                 </h3>
                 <p className="text-muted-foreground mt-2 leading-relaxed">
-                  College Main Campus<br />
+                  Vignan University Hyderabad Campus<br />
                   Central Auditorium & Computer Labs<br />
-                  University Road, City - 123456
+                  Address: Deshmukhi Village, Yadadri Bhuvanagairi District, Telangana 508284
                 </p>
               </div>
             </div>

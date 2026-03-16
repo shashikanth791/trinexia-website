@@ -133,6 +133,17 @@ export function Registration() {
       className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
     />
   </div>
+  <div className="space-y-2">
+  <Label htmlFor="regno">
+    Registration Number *
+  </Label>
+
+  <Input
+    id="regno"
+    required
+    placeholder="Enter your college registration number"
+  />
+</div>
 
   {/* Phone */}
   <div className="space-y-2">

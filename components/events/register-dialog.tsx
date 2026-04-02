@@ -24,7 +24,6 @@ const EVENT_CODES: Record<string, string> = {
   "Ideathon": "IDT",
   "BGMI Tournament": "BGM",
   "Free Fire MAX": "FFM",
-  "Smash Karts": "SKT",
 }
 
 interface RegisterDialogProps {

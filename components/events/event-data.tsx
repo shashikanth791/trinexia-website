@@ -1,5 +1,5 @@
 import type { ElementType } from "react"
-import { Gamepad2, Bug, MessageSquare, Lightbulb, Target, Flame, Car } from "lucide-react"
+import { Gamepad2, Bug, MessageSquare, Lightbulb, Target, Flame } from "lucide-react"
 
 export interface Event {
   id: string
@@ -90,13 +90,15 @@ export const events: Event[] = [
     details: {
       fullDescription:
         "Got a groundbreaking idea? Present your innovative solutions to real-world problems. The best ideas win prizes and potential incubation support. Focus areas include sustainability, healthcare, and education.",
-      teamSize: "Team of 3–4",
-      maxTeamMembers: 4,
+      teamSize: "1 Team Lead + 2 Participants",
+      maxTeamMembers: 3,
       rules: [
-        "10 minutes for presentation",
-        "5 minutes for Q&A with judges",
-        "Ideas must be original and feasible",
-        "Prototype/mockup is a plus but not mandatory",
+        "Each team gets 3 minutes to present their idea.",
+        "Judges get 1 minute to ask questions.",
+        "Each team must have 1 Team Lead and up to 2 participants.",
+        "Presentation should include: Problem, Solution, and Impact.",
+        "Teams must finish within time.",
+        "There should be one laptop per team.",
       ],
       dateVenue: "Day 2 — Innovation Hub",
       entryFee: "₹200 per team",
@@ -120,7 +122,7 @@ export const events: Event[] = [
         "Players must bring their own devices",
       ],
       dateVenue: "Day 1 & 2 — Gaming Arena",
-      entryFee: "₹400 per squad",
+      entryFee: "₹100 per team",
     },
   },
   {
@@ -141,28 +143,7 @@ export const events: Event[] = [
         "All squad members must be present",
       ],
       dateVenue: "Day 1 & 2 — Gaming Arena",
-      entryFee: "₹300 per squad",
-    },
-  },
-  {
-    id: "smash-karts",
-    name: "Smash Karts",
-    description: "Race and battle in this fun multiplayer kart racing game.",
-    icon: Car,
-    category: "gaming",
-    details: {
-      fullDescription:
-        "A fun and casual gaming event featuring Smash Karts! Race against opponents while collecting power-ups and weapons. Perfect for gamers who love arcade-style racing action.",
-      teamSize: "Individual",
-      maxTeamMembers: 1,
-      rules: [
-        "Multiple rounds of elimination",
-        "Power-ups are enabled",
-        "Top 4 advance to finals",
-        "Finals: 3 races, points accumulate",
-      ],
-      dateVenue: "Day 2 — Computer Lab 2",
-      entryFee: "₹50 per person",
+      entryFee: "₹100 per team",
     },
   },
 ]

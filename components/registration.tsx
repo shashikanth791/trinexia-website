@@ -21,7 +21,6 @@ const events = [
   { id: "ideathon", name: "Ideathon" },
   { id: "bgmi", name: "BGMI Tournament" },
   { id: "free-fire", name: "Free Fire MAX" },
-  { id: "smash-karts", name: "Smash Karts" },
 ]
 
 export function Registration() {

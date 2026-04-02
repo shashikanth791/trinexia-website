@@ -41,8 +41,8 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
         </DialogHeader>
 
         <div className="space-y-6 mt-4">
-          {/* Team Size + Entry Fee */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Team Size + Entry Fee (esports only) */}
+          <div className={`grid gap-4 ${event.category === "gaming" ? "grid-cols-2" : "grid-cols-1"}`}>
             <div className="glass-card rounded-lg p-4">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
                 Team Size
@@ -51,14 +51,16 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 {event.details.teamSize}
               </p>
             </div>
-            <div className="glass-card rounded-lg p-4">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Entry Fee
-              </span>
-              <p className="text-foreground font-medium mt-1">
-                {event.details.entryFee}
-              </p>
-            </div>
+            {event.category === "gaming" && (
+              <div className="glass-card rounded-lg p-4">
+                <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                  Entry Fee
+                </span>
+                <p className="text-foreground font-medium mt-1">
+                  {event.details.entryFee}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Date & Venue */}

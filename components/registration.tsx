@@ -12,35 +12,88 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CheckCircle2, Upload } from "lucide-react"
+import { CheckCircle2, Loader2 } from "lucide-react"
+
+const GOOGLE_SHEETS_URL =
+  "https://script.google.com/macros/s/AKfycby2H-ji3EcvctEXoPrWqFGlFX_4qD7IDE69IP_dYgvh46-OuBU7QBArDnRFi6dxFLnmGg/exec"
 
 const events = [
-  { id: "rapid-fire", name: "Technical Rapid Fire" },
-  { id: "debugging", name: "Debugging" },
-  { id: "debate", name: "Tech Debate" },
-  { id: "ideathon", name: "Ideathon" },
-  { id: "bgmi", name: "BGMI Tournament" },
-  { id: "free-fire", name: "Free Fire MAX" },
+  { id: "debugging", name: "Debugging",        code: "DBG" },
+  { id: "debate",    name: "Tech Debate",       code: "DEB" },
+  { id: "ideathon",  name: "Ideathon",          code: "IDT" },
+  { id: "bgmi",      name: "BGMI Tournament",   code: "BGM" },
+  { id: "free-fire", name: "Free Fire MAX",     code: "FFM" },
 ]
 
-export function Registration() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState("")
-  const [fileName, setFileName] = useState("")
+interface FormState {
+  name: string
+  regno: string
+  section: string
+  phone: string
+  team: string
+  upiRef: string
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // In production, this would submit to a backend
-    setIsSubmitted(true)
+const emptyForm = (): FormState => ({
+  name: "", regno: "", section: "", phone: "", team: "", upiRef: "",
+})
+
+export function Registration() {
+  const [form, setForm] = useState<FormState>(emptyForm())
+  const [selectedEvent, setSelectedEvent] = useState("")
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [errorMsg, setErrorMsg] = useState("")
+  const [trinexiaId, setTrinexiaId] = useState("")
+
+  function setField<K extends keyof FormState>(key: K, value: string) {
+    setForm((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFileName(e.target.files[0].name)
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (!selectedEvent) {
+      setErrorMsg("Please select an event.")
+      setStatus("error")
+      return
+    }
+
+    setStatus("loading")
+    setErrorMsg("")
+
+    try {
+      const event = events.find((ev) => ev.id === selectedEvent)!
+      const generatedId = `TN-${event.code}-${Date.now()}`
+
+      const params = new URLSearchParams({
+        trinexiaId:  generatedId,
+        eventName:   event.name,
+        eventCode:   event.code,
+        name:        form.name,
+        regno:       form.regno,
+        section:     form.section,
+        phone:       form.phone,
+        teamMembers: form.team,
+        upiRef:      form.upiRef,
+        submittedAt: new Date().toISOString(),
+      })
+
+      const res = await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`)
+      const data = await res.json()
+
+      if (!data.success) throw new Error(data.error || "Submission failed")
+
+      setTrinexiaId(generatedId)
+      setStatus("success")
+    } catch (err: unknown) {
+      setStatus("error")
+      setErrorMsg(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      )
     }
   }
 
-  if (isSubmitted) {
+  if (status === "success") {
     return (
       <section id="register" className="py-24 md:py-32 relative">
         <div className="container mx-auto px-4 md:px-6">
@@ -50,13 +103,31 @@ export function Registration() {
                 <CheckCircle2 className="h-10 w-10 text-accent" />
               </div>
               <h2 className="font-display text-3xl font-bold text-foreground mb-4">
-                Registration Successful!
+                Registration Confirmed!
               </h2>
-              <p className="text-muted-foreground mb-8">
-                Thank you for registering for TriNexia 2026. We have received your submission and will contact you shortly with further details.
+              <p className="text-muted-foreground mb-4">
+                You're registered for{" "}
+                <span className="text-foreground font-medium">
+                  {events.find((ev) => ev.id === selectedEvent)?.name}
+                </span>
+                . We'll reach out with further details soon.
               </p>
+              <div className="glass-card rounded-xl px-6 py-4 mb-8 border border-foreground/10">
+                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
+                  Your TriNexia ID
+                </p>
+                <p className="font-mono text-2xl font-bold text-accent">{trinexiaId}</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  📋 Save this ID — you'll need it at event check-in
+                </p>
+              </div>
               <Button
-                onClick={() => setIsSubmitted(false)}
+                onClick={() => {
+                  setForm(emptyForm())
+                  setSelectedEvent("")
+                  setStatus("idle")
+                  setTrinexiaId("")
+                }}
                 variant="outline"
                 className="glass-card glass-hover text-foreground"
               >
@@ -71,11 +142,8 @@ export function Registration() {
 
   return (
     <section id="register" className="py-24 md:py-32 relative">
-      {/* Background accent */}
       <div className="absolute top-0 left-1/2 w-96 h-96 bg-accent/5 rounded-full blur-[120px] -translate-x-1/2" />
-
       <div className="container mx-auto px-4 md:px-6 relative">
-        {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-sm text-muted-foreground uppercase tracking-widest">
             Join the Fest
@@ -91,65 +159,51 @@ export function Registration() {
         <div className="max-w-2xl mx-auto">
           <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 md:p-10">
             <div className="space-y-6">
-              {/* Name */}
+
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-foreground">
                   Full Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="name"
-                  required
-                  placeholder="Enter your full name"
+                  id="name" required placeholder="Enter your full name"
+                  value={form.name} onChange={(e) => setField("name", e.target.value)}
                   className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
                 />
               </div>
 
-              {/* Registration Info */}
-<div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="regno" className="text-foreground">
+                    Reg. Number <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="regno" required placeholder="e.g. 22BCS001"
+                    value={form.regno} onChange={(e) => setField("regno", e.target.value)}
+                    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="section" className="text-foreground">
+                    Section <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="section" required placeholder="e.g. CSE-A"
+                    value={form.section} onChange={(e) => setField("section", e.target.value)}
+                    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-foreground">
+                    Phone Number <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="phone" type="tel" required placeholder="+91 98765 43210"
+                    value={form.phone} onChange={(e) => setField("phone", e.target.value)}
+                    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+                  />
+                </div>
+              </div>
 
-  {/* Registration Number */}
-  <div className="space-y-2">
-    <Label htmlFor="regno" className="text-foreground">
-      Registration Number <span className="text-destructive">*</span>
-    </Label>
-    <Input
-      id="regno"
-      required
-      placeholder="Enter your registration number"
-      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-    />
-  </div>
-
-  {/* Section */}
-<div className="space-y-2">
-  <Label htmlFor="section" className="text-foreground">
-    Section <span className="text-destructive">*</span>
-  </Label>
-  <Input
-    id="section"
-    required
-    placeholder="Example: CSE-A"
-    className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-  />
-</div>
-
-  {/* Phone */}
-  <div className="space-y-2">
-    <Label htmlFor="phone" className="text-foreground">
-      Phone Number <span className="text-destructive">*</span>
-    </Label>
-    <Input
-      id="phone"
-      type="tel"
-      required
-      placeholder="+91 98765 43210"
-      className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
-    />
-  </div>
-
-</div>
-
-              {/* Event Selection */}
               <div className="space-y-2">
                 <Label htmlFor="event" className="text-foreground">
                   Select Event <span className="text-destructive">*</span>
@@ -168,62 +222,45 @@ export function Registration() {
                 </Select>
               </div>
 
-              {/* Team Members */}
               <div className="space-y-2">
                 <Label htmlFor="team" className="text-foreground">
                   Team Members (if applicable)
                 </Label>
                 <Textarea
-                  id="team"
-                  placeholder="Enter team member names (one per line)"
-                  rows={3}
+                  id="team" placeholder="Enter team member names (one per line)" rows={3}
+                  value={form.team} onChange={(e) => setField("team", e.target.value)}
                   className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30 resize-none"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Leave blank for individual events
-                </p>
+                <p className="text-xs text-muted-foreground">Leave blank for individual events</p>
               </div>
 
-              {/* Payment Screenshot */}
               <div className="space-y-2">
-                <Label htmlFor="payment" className="text-foreground">
-                  Payment Screenshot
+                <Label htmlFor="upiRef" className="text-foreground">
+                  UPI Transaction ID / Payment Reference <span className="text-destructive">*</span>
                 </Label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="payment"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <div className="glass-card border-dashed border-2 border-border/50 rounded-lg p-6 text-center hover:border-foreground/30 transition-colors">
-                    <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
-                    {fileName ? (
-                      <p className="text-foreground text-sm">{fileName}</p>
-                    ) : (
-                      <>
-                        <p className="text-muted-foreground text-sm">
-                          Click or drag to upload payment screenshot
-                        </p>
-                        <p className="text-muted-foreground/60 text-xs mt-1">
-                          PNG, JPG up to 5MB
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Payment details will be shared after initial registration
-                </p>
+                <Input
+                  id="upiRef" required placeholder="e.g. UPI/123456789/TXN"
+                  value={form.upiRef} onChange={(e) => setField("upiRef", e.target.value)}
+                  className="bg-input border-border/50 text-foreground placeholder:text-muted-foreground focus:border-foreground/30"
+                />
               </div>
 
-              {/* Submit Button */}
+              {status === "error" && (
+                <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                  {errorMsg}
+                </p>
+              )}
+
               <Button
-                type="submit"
+                type="submit" disabled={status === "loading"}
                 className="w-full bg-foreground text-background hover:bg-foreground/90 py-6 text-base font-medium"
               >
-                Submit Registration
+                {status === "loading" ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Submitting…
+                  </span>
+                ) : "Submit Registration"}
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">

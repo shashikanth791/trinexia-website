@@ -15,15 +15,14 @@ import { CheckCircle2, Loader2, UserPlus, X } from "lucide-react"
 import type { Event } from "./event-data"
 
 const GOOGLE_SHEETS_URL =
-  "https://script.google.com/macros/s/AKfycbyDXRoawEgGTQagYdKD8smHBvhrNutEjPb9PtR6VuExIMJkG0N3vrmfOpbp2xdAmzXbKg/exec"
+  "https://script.google.com/macros/s/AKfycby2H-ji3EcvctEXoPrWqFGlFX_4qD7IDE69IP_dYgvh46-OuBU7QBArDnRFi6dxFLnmGg/exec"
 
 const EVENT_CODES: Record<string, string> = {
-  "Technical Rapid Fire": "RFR",
-  "Debugging": "DBG",
-  "Tech Debate": "DEB",
-  "Ideathon": "IDT",
+  "Debugging":       "DBG",
+  "Tech Debate":     "DEB",
+  "Ideathon":        "IDT",
   "BGMI Tournament": "BGM",
-  "Free Fire MAX": "FFM",
+  "Free Fire MAX":   "FFM",
 }
 
 interface RegisterDialogProps {
@@ -103,38 +102,35 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
 
     try {
       const code = EVENT_CODES[event.name] ?? "EVT"
-      const timestamp = Date.now()
-      const generatedId = `TN-${code}-${timestamp}`
+      const generatedId = `TN-${code}-${Date.now()}`
 
       const params = new URLSearchParams({
-        trinexiaId: generatedId,
-        eventName: event.name,
-        eventCode: code,
-        name: form.name,
-        regno: form.regno,
-        section: form.section,
-        phone: form.phone,
+        trinexiaId:  generatedId,
+        eventName:   event.name,
+        eventCode:   code,
+        name:        form.name,
+        regno:       form.regno,
+        section:     form.section,
+        phone:       form.phone,
         teamMembers: form.teamMembers
           .filter((m) => m.name.trim() !== "")
           .map((m) => `${m.name} (${m.regno})`)
           .join(", "),
-        upiRef: form.upiRef,
+        upiRef:      form.upiRef,
         submittedAt: new Date().toISOString(),
       })
 
-      await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`, {
-        method: "GET",
-        mode: "no-cors",
-      })
+      const res = await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`)
+      const data = await res.json()
+
+      if (!data.success) throw new Error(data.error || "Submission failed")
 
       setTrinexiaId(generatedId)
       setStatus("success")
     } catch (err: unknown) {
       setStatus("error")
       setErrorMsg(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again."
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
       )
     }
   }
@@ -168,7 +164,6 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
 
-              {/* Leader Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="reg-name" className="text-sm text-foreground/80">
                   Your Name <Required />
@@ -183,7 +178,6 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 />
               </div>
 
-              {/* Reg No + Section */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="reg-regno" className="text-sm text-foreground/80">
@@ -213,7 +207,6 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 </div>
               </div>
 
-              {/* Phone */}
               <div className="space-y-1.5">
                 <Label htmlFor="reg-phone" className="text-sm text-foreground/80">
                   Phone Number <Required />
@@ -229,7 +222,6 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 />
               </div>
 
-              {/* Team Members */}
               {extraMax > 0 && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -290,7 +282,6 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 </div>
               )}
 
-              {/* UPI Reference */}
               <div className="space-y-1.5">
                 <Label htmlFor="reg-upi" className="text-sm text-foreground/80">
                   UPI Transaction ID / Payment Reference <Required />
@@ -305,14 +296,12 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
                 />
               </div>
 
-              {/* Error */}
               {status === "error" && (
                 <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
                   {errorMsg}
                 </p>
               )}
 
-              {/* Submit */}
               <Button
                 type="submit"
                 disabled={status === "loading"}
@@ -363,7 +352,6 @@ function SuccessScreen({
           We&apos;ll reach out with further details soon.
         </p>
       </div>
-
       <div className="glass-card rounded-xl px-6 py-4 w-full border border-foreground/10">
         <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
           Your TriNexia Team ID
@@ -373,7 +361,6 @@ function SuccessScreen({
           📋 Save this ID — you&apos;ll need it at event check-in
         </p>
       </div>
-
       <Button
         onClick={onClose}
         variant="outline"

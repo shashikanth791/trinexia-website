@@ -41,7 +41,6 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
         </DialogHeader>
 
         <div className="space-y-6 mt-4">
-          {/* Team Size + Entry Fee (esports only) */}
           <div className={`grid gap-4 ${event.category === "gaming" ? "grid-cols-2" : "grid-cols-1"}`}>
             <div className="glass-card rounded-lg p-4">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -63,7 +62,6 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             )}
           </div>
 
-          {/* Date & Venue */}
           <div className="glass-card rounded-lg p-4">
             <span className="text-xs text-muted-foreground uppercase tracking-wider">
               Date & Venue
@@ -73,7 +71,6 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             </p>
           </div>
 
-          {/* Rules */}
           <div>
             <span className="text-sm font-medium text-foreground">Rules</span>
             <ul className="mt-3 space-y-2">
@@ -89,7 +86,6 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             </ul>
           </div>
 
-          {/* Register CTA */}
           <Button
             className="w-full bg-foreground text-background hover:bg-foreground/90"
             onClick={handleRegisterClick}

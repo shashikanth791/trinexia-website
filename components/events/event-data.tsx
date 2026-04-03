@@ -1,5 +1,5 @@
 import type { ElementType } from "react"
-import { Gamepad2, Bug, MessageSquare, Lightbulb, Target, Flame } from "lucide-react"
+import { Gamepad2, Bug, MessageSquare, Lightbulb, Flame } from "lucide-react"
 
 export interface Event {
   id: string
@@ -18,27 +18,6 @@ export interface Event {
 }
 
 export const events: Event[] = [
-  {
-    id: "rapid-fire",
-    name: "Technical Rapid Fire",
-    description: "Test your quick thinking with rapid-fire technical questions across multiple domains.",
-    icon: Target,
-    category: "technical",
-    details: {
-      fullDescription:
-        "A fast-paced quiz competition where participants answer technical questions across various domains including programming, algorithms, web development, and more. Quick thinking and broad knowledge are key to victory!",
-      teamSize: "Individual",
-      maxTeamMembers: 1,
-      rules: [
-        "Each round has 60 seconds of rapid-fire questions",
-        "Points are awarded for correct answers",
-        "Wrong answers don't carry negative marks",
-        "Top scorers advance to the final round",
-      ],
-      dateVenue: "Day 1 — Main Auditorium",
-      entryFee: "₹50 per person",
-    },
-  },
   {
     id: "debugging",
     name: "Debugging",

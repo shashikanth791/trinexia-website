@@ -18,10 +18,11 @@ const GOOGLE_SHEETS_URL =
   "https://script.google.com/macros/s/AKfycby2H-ji3EcvctEXoPrWqFGlFX_4qD7IDE69IP_dYgvh46-OuBU7QBArDnRFi6dxFLnmGg/exec"
 
 const events = [
-  { id: "debugging", name: "Debugging",        code: "DBG" },
-  { id: "ideathon",  name: "Ideathon",          code: "IDT" },
-  { id: "bgmi",      name: "BGMI Tournament",   code: "BGM" },
-  { id: "free-fire", name: "Free Fire MAX",     code: "FFM" },
+  { id: "debugging",       name: "Debugging",        code: "DBG" },
+  { id: "ideathon",        name: "Ideathon",          code: "IDT" },
+  { id: "tech-rapid-fire", name: "Tech Rapid Fire",   code: "TRF" },
+  { id: "bgmi",            name: "BGMI Tournament",   code: "BGM" },
+  { id: "free-fire",       name: "Free Fire MAX",     code: "FFM" },
 ]
 
 interface FormState {

@@ -14,12 +14,14 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2, Loader2, UserPlus, X } from "lucide-react"
 import type { Event } from "./event-data"
 
-const GOOGLE_SHEETS_URL =
-  "https://script.google.com/macros/s/AKfycby2H-ji3EcvctEXoPrWqFGlFX_4qD7IDE69IP_dYgvh46-OuBU7QBArDnRFi6dxFLnmGg/exec"
+// ✅ PASTE YOUR NEW APPS SCRIPT URL HERE
+const SHEETS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxoFS2KbbMpA3igUS20mp-h93VAHdoB08Vd4cyYxereh1PIYSJZJmislY-8CBVrlIQLGA/exec"
 
 const EVENT_CODES: Record<string, string> = {
   "Debugging":       "DBG",
   "Ideathon":        "IDT",
+  "Tech Rapid Fire": "TRF",
   "BGMI Tournament": "BGM",
   "Free Fire MAX":   "FFM",
 }
@@ -101,7 +103,14 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
 
     try {
       const code = EVENT_CODES[event.name] ?? "EVT"
-      const generatedId = `TN-${code}-${Date.now()}`
+
+      // Fetch current row count to generate sequential ID
+      const countRes = await fetch(
+        `${SHEETS_SCRIPT_URL}?action=count&eventCode=${code}`
+      )
+      const countData = await countRes.json()
+      const nextNum = String((countData.count ?? 0) + 1).padStart(3, "0")
+      const generatedId = `${code}-${nextNum}`
 
       const params = new URLSearchParams({
         trinexiaId:  generatedId,
@@ -119,7 +128,7 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
         submittedAt: new Date().toISOString(),
       })
 
-      const res = await fetch(`${GOOGLE_SHEETS_URL}?${params.toString()}`)
+      const res = await fetch(`${SHEETS_SCRIPT_URL}?${params.toString()}`)
       const data = await res.json()
 
       if (!data.success) throw new Error(data.error || "Submission failed")
@@ -353,7 +362,7 @@ function SuccessScreen({
       </div>
       <div className="glass-card rounded-xl px-6 py-4 w-full border border-foreground/10">
         <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
-          Your TriNexia Team ID
+          Your Registration ID
         </p>
         <p className="font-mono text-2xl font-bold text-accent">{trinexiaId}</p>
         <p className="text-xs text-muted-foreground mt-2">

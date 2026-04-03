@@ -1,5 +1,5 @@
 import type { ElementType } from "react"
-import { Gamepad2, Bug, Lightbulb, Flame } from "lucide-react"
+import { Gamepad2, Bug, Lightbulb, Flame, Zap } from "lucide-react"
 
 export interface Coordinator {
   name: string
@@ -42,7 +42,7 @@ export const events: Event[] = [
         "Partial marks for identifying bugs",
         "Full marks for fixing bugs correctly",
       ],
-      dateVenue: "Day 1 — Computer Lab 1",
+      dateVenue: "Computer Lab 1",
       entryFee: "₹100 per team",
     },
     coordinators: [
@@ -76,6 +76,37 @@ export const events: Event[] = [
     coordinators: [
       { name: "B. Karuna",    phone: "8919708414", role: "student" },
       { name: "Mr. Veeraiah", phone: "9848405892", role: "faculty" },
+    ],
+  },
+  {
+    id: "tech-rapid-fire",
+    name: "Tech Rapid Fire",
+    description: "Answer rapid-fire tech questions in quick succession — speed, accuracy, and teamwork decide the winner.",
+    icon: Zap,
+    category: "technical",
+    details: {
+      fullDescription:
+        "TechPulse: Rapid Fire Challenge tests your team's technical knowledge under pressure! Questions are fired in rapid succession — answer within 5 seconds or pass. No negative marking means every attempt counts. The team with the highest score at the end takes the crown.",
+      teamSize: "2–3 Participants",
+      maxTeamMembers: 3,
+      rules: [
+        "Team size: 2–3 participants maximum.",
+        "Each team gets 30–60 seconds per round.",
+        "Questions are asked in rapid succession, one after another.",
+        "Participants must answer immediately within 5 seconds.",
+        "If unsure, say 'Pass' and move to the next question.",
+        "No repetition of passed questions.",
+        "Each correct answer = 1 point.",
+        "No negative marking.",
+        "Team with the highest score wins.",
+        "Judges' decision will be final and binding.",
+      ],
+      dateVenue: "Day 1 — Innovation Hub",
+      entryFee: "₹100 per team",
+    },
+    coordinators: [
+      { name: "G. Bhavana",   phone: "9705572426",   role: "student" },
+      { name: "Mr. T. Ashok", phone: "7793958030",    role: "faculty" },
     ],
   },
   {

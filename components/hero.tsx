@@ -113,9 +113,9 @@ export function Hero() {
             }`}
           >
             {[
-              { value: "7+", label: "Events" },
+              { value: "6", label: "Events" },
               { value: "500+", label: "Participants" },
-              { value: "₹50K+", label: "Prizes" },
+              { value: "₹20K+", label: "Prizes" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-2xl md:text-3xl font-display font-bold text-foreground">

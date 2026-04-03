@@ -4,16 +4,16 @@ import { Phone, Mail, MapPin } from "lucide-react"
 
 const organizers = [
   {
-    name: "Rahul Sharma",
-    role: "Event Coordinator",
-    phone: "+91 98765 43210",
-    email: "rahul@trinexia.com",
+    name: "L Shashikanth Reddy",
+    role: "Registration & Event Coordinator",
+    phone: "+91 9989646524",
+    email: "shashikanth1096@gmail.com",
   },
   {
-    name: "Priya Patel",
-    role: "Technical Coordinator",
-    phone: "+91 87654 32109",
-    email: "priya@trinexia.com",
+    name: " I Manoj kumar",
+    role: "Media & Event Coordinator",
+    phone: "+91 9963441830",
+    email: "maniitha7@gmail.com",
   },
 ]
 

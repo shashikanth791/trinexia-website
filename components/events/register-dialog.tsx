@@ -19,7 +19,6 @@ const GOOGLE_SHEETS_URL =
 
 const EVENT_CODES: Record<string, string> = {
   "Debugging":       "DBG",
-  "Tech Debate":     "DEB",
   "Ideathon":        "IDT",
   "BGMI Tournament": "BGM",
   "Free Fire MAX":   "FFM",

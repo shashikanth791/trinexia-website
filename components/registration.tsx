@@ -19,7 +19,6 @@ const GOOGLE_SHEETS_URL =
 
 const events = [
   { id: "debugging", name: "Debugging",        code: "DBG" },
-  { id: "debate",    name: "Tech Debate",       code: "DEB" },
   { id: "ideathon",  name: "Ideathon",          code: "IDT" },
   { id: "bgmi",      name: "BGMI Tournament",   code: "BGM" },
   { id: "free-fire", name: "Free Fire MAX",     code: "FFM" },

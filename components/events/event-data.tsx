@@ -1,5 +1,11 @@
 import type { ElementType } from "react"
-import { Gamepad2, Bug, MessageSquare, Lightbulb, Flame } from "lucide-react"
+import { Gamepad2, Bug, Lightbulb, Flame } from "lucide-react"
+
+export interface Coordinator {
+  name: string
+  phone: string
+  role: "student" | "faculty"
+}
 
 export interface Event {
   id: string
@@ -15,6 +21,7 @@ export interface Event {
     dateVenue: string
     entryFee: string
   }
+  coordinators: Coordinator[]
 }
 
 export const events: Event[] = [
@@ -38,27 +45,11 @@ export const events: Event[] = [
       dateVenue: "Day 1 — Computer Lab 1",
       entryFee: "₹100 per team",
     },
-  },
-  {
-    id: "debate",
-    name: "Tech Debate",
-    description: "Engage in thought-provoking debates on cutting-edge technology topics.",
-    icon: MessageSquare,
-    category: "technical",
-    details: {
-      fullDescription:
-        "A platform for tech enthusiasts to debate on contemporary technology topics. Topics range from AI ethics to open source vs proprietary software. Sharpen your argumentation skills!",
-      teamSize: "Team of 2",
-      maxTeamMembers: 2,
-      rules: [
-        "Topics will be revealed 30 minutes before the debate",
-        "Each team gets 5 minutes for opening statements",
-        "Rebuttal rounds of 3 minutes each",
-        "Judged on content, delivery, and rebuttal strength",
-      ],
-      dateVenue: "Day 2 — Seminar Hall",
-      entryFee: "₹150 per team",
-    },
+    coordinators: [
+      { name: "Sk. Seema",        phone: "8341831466", role: "student" },
+      { name: "Kaduduri Abhiram", phone: "9948496025", role: "student" },
+      { name: "Ms. Beulah",       phone: "9494490362", role: "faculty" },
+    ],
   },
   {
     id: "ideathon",
@@ -82,6 +73,10 @@ export const events: Event[] = [
       dateVenue: "Day 2 — Innovation Hub",
       entryFee: "₹200 per team",
     },
+    coordinators: [
+      { name: "B. Karuna",    phone: "8919708414", role: "student" },
+      { name: "Mr. Veeraiah", phone: "9848405892", role: "faculty" },
+    ],
   },
   {
     id: "bgmi",
@@ -103,6 +98,10 @@ export const events: Event[] = [
       dateVenue: "Day 1 & 2 — Gaming Arena",
       entryFee: "₹100 per team",
     },
+    coordinators: [
+      { name: "P. Sathwik",      phone: "9100411088", role: "student" },
+      { name: "Ms. Prashanthi",  phone: "9346062386", role: "faculty" },
+    ],
   },
   {
     id: "free-fire",
@@ -124,5 +123,9 @@ export const events: Event[] = [
       dateVenue: "Day 1 & 2 — Gaming Arena",
       entryFee: "₹100 per team",
     },
+    coordinators: [
+      { name: "L. Shashikanth Reddy", phone: "9989646524", role: "student" },
+      { name: "Ms. Prashanthi",       phone: "9346062386", role: "faculty" },
+    ],
   },
 ]

@@ -146,6 +146,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 </button>
               </div>
 
+              {/* Entry fee ONLY for gaming */}
               {event.category === "gaming" && (
                 <div className="glass-card rounded-lg p-4">
                   <span className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -157,14 +158,17 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 </div>
               )}
 
-              <div className="glass-card rounded-lg p-4">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Date & Venue
-                </span>
-                <p className="text-foreground font-medium mt-1">
-                  {event.details.dateVenue}
-                </p>
-              </div>
+              {/* Date & Venue ONLY for gaming */}
+              {event.category === "gaming" && (
+                <div className="glass-card rounded-lg p-4">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Date & Venue
+                  </span>
+                  <p className="text-foreground font-medium mt-1">
+                    {event.details.dateVenue}
+                  </p>
+                </div>
+              )}
 
               <div>
                 <span className="text-sm font-medium text-foreground">Rules</span>

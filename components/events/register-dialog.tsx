@@ -11,26 +11,10 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2, Loader2, UserPlus, X } from "lucide-react"
+import { CheckCircle2, Loader2 } from "lucide-react"
 import type { Event } from "./event-data"
 
-// ✅ PASTE YOUR NEW APPS SCRIPT URL HERE
-const SHEETS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxoFS2KbbMpA3igUS20mp-h93VAHdoB08Vd4cyYxereh1PIYSJZJmislY-8CBVrlIQLGA/exec"
-
-const EVENT_CODES: Record<string, string> = {
-  "Debugging":       "DBG",
-  "Ideathon":        "IDT",
-  "Tech Rapid Fire": "TRF",
-  "BGMI Tournament": "BGM",
-  "Free Fire MAX":   "FFM",
-}
-
-interface RegisterDialogProps {
-  event: Event | null
-  open: boolean
-  onClose: () => void
-}
+const SHEETS_SCRIPT_URL = "YOUR_SCRIPT_URL"
 
 interface TeamMember {
   name: string
@@ -55,37 +39,45 @@ const emptyForm = (): FormState => ({
   upiRef: "",
 })
 
-function maxExtraMembers(event: Event) {
-  return Math.max(0, event.details.maxTeamMembers - 1)
+function getTeamConfig(event: Event) {
+  switch (event.name) {
+    case "Ideathon":
+      return { total: 3, required: 3 }
+    case "Tech Rapid Fire":
+      return { total: 3, required: 2 }
+    case "Debugging":
+      return { total: 1, required: 1 }
+    case "BGMI Tournament":
+    case "Free Fire MAX":
+      return { total: 4, required: 4 }
+    default:
+      return { total: 1, required: 1 }
+  }
 }
 
-export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
+function isGamingEvent(event: Event) {
+  return event.category === "gaming"
+}
+
+// 🔥 NEW INPUT STYLE
+const inputStyle =
+  "w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-white placeholder:text-white/50 " +
+  "focus:border-white focus:ring-2 focus:ring-white/30 focus:outline-none transition-all"
+
+export function RegisterDialog({ event, open, onClose }: any) {
   const [form, setForm] = useState<FormState>(emptyForm())
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
-  const [trinexiaId, setTrinexiaId] = useState("")
 
   function handleClose() {
     setForm(emptyForm())
     setStatus("idle")
     setErrorMsg("")
-    setTrinexiaId("")
     onClose()
   }
 
-  function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
+  function setField(key: keyof FormState, value: any) {
     setForm((prev) => ({ ...prev, [key]: value }))
-  }
-
-  function addMember() {
-    if (!event) return
-    if (form.teamMembers.length < maxExtraMembers(event)) {
-      setField("teamMembers", [...form.teamMembers, { name: "", regno: "" }])
-    }
-  }
-
-  function removeMember(index: number) {
-    setField("teamMembers", form.teamMembers.filter((_, i) => i !== index))
   }
 
   function updateMember(index: number, field: keyof TeamMember, value: string) {
@@ -99,283 +91,139 @@ export function RegisterDialog({ event, open, onClose }: RegisterDialogProps) {
     if (!event) return
 
     setStatus("loading")
-    setErrorMsg("")
 
     try {
-      const code = EVENT_CODES[event.name] ?? "EVT"
-
-      // Fetch current row count to generate sequential ID
-      const countRes = await fetch(
-        `${SHEETS_SCRIPT_URL}?action=count&eventCode=${code}`
-      )
-      const countData = await countRes.json()
-      const nextNum = String((countData.count ?? 0) + 1).padStart(3, "0")
-      const generatedId = `${code}-${nextNum}`
-
       const params = new URLSearchParams({
-        trinexiaId:  generatedId,
-        eventName:   event.name,
-        eventCode:   code,
-        name:        form.name,
-        regno:       form.regno,
-        section:     form.section,
-        phone:       form.phone,
+        name: form.name,
+        regno: form.regno,
+        section: form.section,
+        phone: form.phone,
         teamMembers: form.teamMembers
           .filter((m) => m.name.trim() !== "")
           .map((m) => `${m.name} (${m.regno})`)
           .join(", "),
-        upiRef:      form.upiRef,
-        submittedAt: new Date().toISOString(),
+        upiRef: isGamingEvent(event) ? form.upiRef : "",
+        eventName: event.name,
       })
 
-      const res = await fetch(`${SHEETS_SCRIPT_URL}?${params.toString()}`)
-      const data = await res.json()
-
-      if (!data.success) throw new Error(data.error || "Submission failed")
-
-      setTrinexiaId(generatedId)
+      await fetch(`${SHEETS_SCRIPT_URL}?${params.toString()}`)
       setStatus("success")
-    } catch (err: unknown) {
+    } catch {
       setStatus("error")
-      setErrorMsg(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
-      )
+      setErrorMsg("Submission failed")
     }
   }
 
   if (!event) return null
-
-  const extraMax = maxExtraMembers(event)
+  const teamConfig = getTeamConfig(event)
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose() }}>
-      <DialogContent className="max-w-md glass-card backdrop-blur-xl max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+      <DialogContent className="max-w-md backdrop-blur-xl bg-black/80 border border-white/10">
+
         {status === "success" ? (
-          <SuccessScreen
-            eventName={event.name}
-            trinexiaId={trinexiaId}
-            onClose={handleClose}
-          />
+          <div className="text-center py-6 space-y-4">
+            <CheckCircle2 className="h-10 w-10 text-green-500 mx-auto" />
+            <h3 className="text-lg font-semibold">Registration Submitted</h3>
+            <Button onClick={handleClose}>Done</Button>
+          </div>
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="font-display text-xl">
-                Register — {event.name}
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm">
-                Fill in your details to secure your spot. Entry fee:{" "}
-                <span className="text-foreground font-medium">
-                  {event.details.entryFee}
-                </span>
+              <DialogTitle>Register — {event.name}</DialogTitle>
+              <DialogDescription>
+                {isGamingEvent(event)
+                  ? `Entry fee: ${event.details.entryFee}`
+                  : "Free Registration"}
               </DialogDescription>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+            <form onSubmit={handleSubmit} className="space-y-4">
 
-              <div className="space-y-1.5">
-                <Label htmlFor="reg-name" className="text-sm text-foreground/80">
-                  Your Name <Required />
-                </Label>
-                <Input
-                  id="reg-name"
-                  placeholder="Full name"
-                  value={form.name}
-                  onChange={(e) => setField("name", e.target.value)}
+              <input
+                className={inputStyle}
+                placeholder="Your Name"
+                required
+                value={form.name}
+                onChange={(e) => setField("name", e.target.value)}
+              />
+
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  className={inputStyle}
+                  placeholder="Reg No"
                   required
-                  className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
+                  value={form.regno}
+                  onChange={(e) => setField("regno", e.target.value)}
+                />
+                <input
+                  className={inputStyle}
+                  placeholder="Section"
+                  required
+                  value={form.section}
+                  onChange={(e) => setField("section", e.target.value)}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-regno" className="text-sm text-foreground/80">
-                    Reg. Number <Required />
-                  </Label>
-                  <Input
-                    id="reg-regno"
-                    placeholder="e.g. 22BCS001"
-                    value={form.regno}
-                    onChange={(e) => setField("regno", e.target.value)}
-                    required
-                    className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="reg-section" className="text-sm text-foreground/80">
-                    Section <Required />
-                  </Label>
-                  <Input
-                    id="reg-section"
-                    placeholder="e.g. CSE-A"
-                    value={form.section}
-                    onChange={(e) => setField("section", e.target.value)}
-                    required
-                    className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                  />
-                </div>
-              </div>
+              <input
+                className={inputStyle}
+                placeholder="Phone"
+                required
+                value={form.phone}
+                onChange={(e) => setField("phone", e.target.value)}
+              />
 
-              <div className="space-y-1.5">
-                <Label htmlFor="reg-phone" className="text-sm text-foreground/80">
-                  Phone Number <Required />
-                </Label>
-                <Input
-                  id="reg-phone"
-                  type="tel"
-                  placeholder="+91 98765 43210"
-                  value={form.phone}
-                  onChange={(e) => setField("phone", e.target.value)}
-                  required
-                  className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                />
-              </div>
+              {/* TEAM */}
+              {teamConfig.total > 1 && (
+                <div className="space-y-3">
+                  <Label>Team Members ({teamConfig.required} required)</Label>
 
-              {extraMax > 0 && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm text-foreground/80">
-                      Team Members
-                      <span className="text-muted-foreground font-normal ml-1">
-                        (up to {extraMax} additional)
-                      </span>
-                    </Label>
-                    {form.teamMembers.length < extraMax && (
-                      <button
-                        type="button"
-                        onClick={addMember}
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <UserPlus className="h-3.5 w-3.5" />
-                        Add member
-                      </button>
-                    )}
-                  </div>
-
-                  {form.teamMembers.length === 0 && (
-                    <p className="text-xs text-muted-foreground/60 italic">
-                      No team members added yet.
-                    </p>
-                  )}
-
-                  <div className="space-y-2">
-                    {form.teamMembers.map((member, i) => (
-                      <div key={i} className="glass-card rounded-lg p-3 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs font-medium text-foreground/70">
-                            Member {i + 2}
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => removeMember(i)}
-                            className="text-muted-foreground hover:text-destructive transition-colors"
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                        <Input
-                          placeholder="Full name"
-                          value={member.name}
-                          onChange={(e) => updateMember(i, "name", e.target.value)}
-                          className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                        />
-                        <Input
-                          placeholder="Reg. Number (e.g. 22BCS002)"
-                          value={member.regno}
-                          onChange={(e) => updateMember(i, "regno", e.target.value)}
-                          className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
-                        />
-                      </div>
-                    ))}
-                  </div>
+                  {Array.from({ length: teamConfig.total - 1 }).map((_, i) => (
+                    <div key={i} className="space-y-2">
+                      <input
+                        className={inputStyle}
+                        placeholder={`Member ${i + 2} Name`}
+                        required={i < teamConfig.required - 1}
+                        onChange={(e) => updateMember(i, "name", e.target.value)}
+                      />
+                      <input
+                        className={inputStyle}
+                        placeholder={`Member ${i + 2} Reg No`}
+                        required={i < teamConfig.required - 1}
+                        onChange={(e) => updateMember(i, "regno", e.target.value)}
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 
-              <div className="space-y-1.5">
-                <Label htmlFor="reg-upi" className="text-sm text-foreground/80">
-                  UPI Transaction ID / Payment Reference <Required />
-                </Label>
-                <Input
-                  id="reg-upi"
-                  placeholder="e.g. UPI/123456789/TXN"
+              {/* UPI ONLY FOR GAMING */}
+              {isGamingEvent(event) && (
+                <input
+                  className={inputStyle}
+                  placeholder="UPI Transaction ID"
+                  required
                   value={form.upiRef}
                   onChange={(e) => setField("upiRef", e.target.value)}
-                  required
-                  className="glass-card border-foreground/10 bg-transparent focus:border-foreground/30"
                 />
-              </div>
-
-              {status === "error" && (
-                <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
-                  {errorMsg}
-                </p>
               )}
 
-              <Button
-                type="submit"
-                disabled={status === "loading"}
-                className="w-full bg-foreground text-background hover:bg-foreground/90 mt-2"
-              >
+              {status === "error" && (
+                <p className="text-red-500 text-sm">{errorMsg}</p>
+              )}
+
+              <Button type="submit" className="w-full bg-white text-black hover:bg-white/90">
                 {status === "loading" ? (
-                  <span className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Submitting…
-                  </span>
+                  <Loader2 className="animate-spin" />
                 ) : (
                   "Submit Registration"
                 )}
               </Button>
+
             </form>
           </>
         )}
       </DialogContent>
     </Dialog>
-  )
-}
-
-function Required() {
-  return <span className="text-destructive ml-0.5">*</span>
-}
-
-function SuccessScreen({
-  eventName,
-  trinexiaId,
-  onClose,
-}: {
-  eventName: string
-  trinexiaId: string
-  onClose: () => void
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-5 py-8 text-center">
-      <div className="p-4 rounded-full bg-accent/10">
-        <CheckCircle2 className="h-10 w-10 text-accent" />
-      </div>
-      <div className="space-y-2">
-        <h3 className="font-display text-xl font-bold text-foreground">
-          Registration Confirmed!
-        </h3>
-        <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
-          You&apos;re registered for{" "}
-          <span className="text-foreground font-medium">{eventName}</span>.
-          We&apos;ll reach out with further details soon.
-        </p>
-      </div>
-      <div className="glass-card rounded-xl px-6 py-4 w-full border border-foreground/10">
-        <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
-          Your Registration ID
-        </p>
-        <p className="font-mono text-2xl font-bold text-accent">{trinexiaId}</p>
-        <p className="text-xs text-muted-foreground mt-2">
-          📋 Save this ID — you&apos;ll need it at event check-in
-        </p>
-      </div>
-      <Button
-        onClick={onClose}
-        variant="outline"
-        className="mt-2 border-foreground/20 text-foreground hover:bg-foreground/5"
-      >
-        Done
-      </Button>
-    </div>
   )
 }

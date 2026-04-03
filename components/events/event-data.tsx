@@ -60,7 +60,7 @@ export const events: Event[] = [
     details: {
       fullDescription:
         "Got a groundbreaking idea? Present your innovative solutions to real-world problems. The best ideas win prizes and potential incubation support. Focus areas include sustainability, healthcare, and education.",
-      teamSize: "1 Team Lead + 2 Participants",
+      teamSize: " 3 participants",
       maxTeamMembers: 3,
       rules: [
         "Each team gets 3 minutes to present their idea.",
@@ -126,7 +126,7 @@ export const events: Event[] = [
         "Emulators are strictly prohibited",
         "Players must bring their own devices",
       ],
-      dateVenue: "Day 1 & 2 — Gaming Arena",
+      dateVenue: "Computer Lab 212",
       entryFee: "₹100 per team",
     },
     coordinators: [
@@ -151,7 +151,7 @@ export const events: Event[] = [
         "No third-party apps allowed",
         "All squad members must be present",
       ],
-      dateVenue: "Day 1 & 2 — Gaming Arena",
+      dateVenue: "Computer Lab 212",
       entryFee: "₹100 per team",
     },
     coordinators: [

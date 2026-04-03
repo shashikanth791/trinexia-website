@@ -11,7 +11,7 @@ const organizers = [
   },
   {
     name: " I Manoj kumar",
-    role: "Media & Event Coordinator",
+    role: "Event Coordinator",
     phone: "+91 9963441830",
     email: "maniitha7@gmail.com",
   },
@@ -21,7 +21,7 @@ export function Contact() {
   return (
     <section id="contact" className="py-24 md:py-32 relative">
       {/* Background accent */}
-      <div className="absolute top-1/2 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] -translate-y-1/2" />
+    
 
       <div className="container mx-auto px-4 md:px-6 relative">
         {/* Section Header */}

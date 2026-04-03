@@ -1,8 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { ChevronDown } from "lucide-react"
 
 export function Hero() {
@@ -15,17 +13,27 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-start justify-center overflow-hidden bg-black"
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-[200px]"></div>
-        <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[200px]"></div>
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/vig.jpg"
+          alt="event background"
+          className="w-full h-full object-cover object-[center_top] opacity-50 scale-105"
+        />
+        <div className="absolute inset-0 bg-black/25" />
       </div>
 
-      {/* Grid pattern */}
+      {/* Subtle glow */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-white/5 rounded-full blur-[200px]"></div>
+        <div className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-white/3 rounded-full blur-[200px]"></div>
+      </div>
+
+      {/* Very light grid */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.015]"
         style={{
           backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
@@ -35,46 +43,48 @@ export function Hero() {
 
       {/* Gradient orbs */}
       <div
-        className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-accent/10 blur-[120px] transition-opacity duration-1000 ${
+        className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-white/5 blur-[120px] transition-opacity duration-1000 ${
           mounted ? "opacity-100" : "opacity-0"
         }`}
       />
       <div
-        className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-foreground/5 blur-[100px] transition-opacity duration-1000 delay-300 ${
+        className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-white/3 blur-[100px] transition-opacity duration-1000 delay-300 ${
           mounted ? "opacity-100" : "opacity-0"
         }`}
       />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 md:px-6">
+      <div className="relative z-10 container mx-auto px-4 md:px-6 pt-24 md:pt-28">
         <div className="max-w-4xl mx-auto text-center">
+
           {/* Badge */}
           <div
-            className={`inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full mb-8 transition-all duration-700 ${
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 transition-all duration-700 border border-white/15 bg-white/5 backdrop-blur-md ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span className="text-sm text-muted-foreground tracking-wide">
+            <span className="w-2 h-2 rounded-full bg-white/80 animate-pulse" />
+            <span className="text-sm text-white/60 tracking-wide">
               April 8, 2026 — Vignan University Hyderabad Campus
             </span>
           </div>
 
-          {/* Main Title */}
+          {/* Title */}
           <h1
-            className={`font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 glow-text transition-all duration-700 delay-100 ${
+            className={`font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 text-white transition-all duration-700 delay-100 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
+            style={{ textShadow: "0 0 60px rgba(255,255,255,0.2), 0 0 120px rgba(255,255,255,0.08)" }}
           >
             TriNexia
-            <span className="block text-muted-foreground text-3xl md:text-5xl lg:text-6xl mt-2 font-light">
+            <span className="block text-white/40 text-3xl md:text-5xl lg:text-6xl mt-2 font-light">
               2026
             </span>
           </h1>
 
           {/* Subtitle */}
           <p
-            className={`text-xl md:text-2xl text-muted-foreground font-light tracking-wide mb-4 transition-all duration-700 delay-200 ${
+            className={`text-xl md:text-2xl text-white/60 font-light tracking-wide mb-4 transition-all duration-700 delay-200 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
@@ -83,7 +93,7 @@ export function Hero() {
 
           {/* Description */}
           <p
-            className={`text-base md:text-lg text-muted-foreground/80 max-w-2xl mx-auto mb-10 leading-relaxed transition-all duration-700 delay-300 ${
+            className={`text-base md:text-lg text-white/40 max-w-2xl mx-auto mb-10 leading-relaxed transition-all duration-700 delay-300 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
@@ -97,13 +107,14 @@ export function Hero() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            <Button
-              asChild
-              size="lg"
-              className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-medium rounded-lg transition-all duration-300 hover:scale-105"
+            <a
+              href="#events"
+              className="group relative inline-flex items-center gap-2 px-8 py-4 text-base font-medium rounded-lg border border-white/30 text-white backdrop-blur-sm hover:border-white/50 transition-all duration-300 hover:scale-105"
+              style={{ background: "rgba(255,255,255,0.07)" }}
             >
-              <Link href="#events">Explore Events</Link>
-            </Button>
+              <span>Explore Events</span>
+              <ChevronDown className="h-4 w-4 rotate-[-90deg] group-hover:translate-x-0.5 transition-transform" />
+            </a>
           </div>
 
           {/* Stats */}
@@ -118,25 +129,27 @@ export function Hero() {
               { value: "₹20K+", label: "Prizes" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-2xl md:text-3xl font-display font-bold text-foreground">
+                <div className="text-2xl md:text-3xl font-display font-bold text-white">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+                <div className="text-sm text-white/50 mt-1">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <Link
+        <a
           href="#events"
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex flex-col items-center gap-2 text-white/40 hover:text-white/80 transition-colors"
         >
           <span className="text-xs tracking-widest uppercase">Scroll</span>
           <ChevronDown className="h-5 w-5" />
-        </Link>
+        </a>
       </div>
     </section>
   )

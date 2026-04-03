@@ -13,27 +13,26 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk'
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'TriNexia 2026 | The Ultimate Tech & Gaming Fest',
-  description: 'Join us for TriNexia 2026 - the ultimate college tech and gaming festival featuring technical challenges, gaming tournaments, and more!',
-  keywords: ['tech fest', 'gaming fest', 'college event', 'TriNexia', 'hackathon', 'esports'],
-  authors: [{ name: 'TriNexia Team' }],
-  icons: {
-    icon: [
+  description:
+    'Join TriNexia 2026 - the ultimate college tech and gaming fest with competitions, gaming, and innovation.',
+
+  openGraph: {
+    title: 'TriNexia 2026',
+    description:
+      'The Ultimate Tech & Gaming Fest | April 8, 2026',
+    url: 'https://trinexia-website.vercel.app',
+    siteName: 'TriNexia',
+    images: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: '/og-image.png', // IMPORTANT
+        width: 1200,
+        height: 630,
+        alt: 'TriNexia 2026',
       },
     ],
-    apple: '/apple-icon.png',
+    type: 'website',
   },
 }
 

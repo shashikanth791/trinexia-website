@@ -24,10 +24,10 @@ export function Navbar() {
           <Link href="#home" className="flex items-center gap-2">
             <div className="relative">
               <span className="font-display text-2xl font-bold tracking-tight text-white glow-text">
-                TriNexia
+                VFSTR
               </span>
-              <span className="absolute -top-1 -right-8 text-xs font-medium text-white/70">
-                2026
+              <span className="absolute -top-3 -right-12 text-xs font-medium text-white/70">
+                Hyderabad
               </span>
             </div>
           </Link>

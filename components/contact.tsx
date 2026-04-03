@@ -1,6 +1,6 @@
 "use client"
 
-import { Phone, Mail, MapPin } from "lucide-react"
+import { Phone, Mail, MapPin, GraduationCap } from "lucide-react"
 
 const organizers = [
   {
@@ -8,21 +8,37 @@ const organizers = [
     role: "Registration & Event Coordinator",
     phone: "+91 9989646524",
     email: "shashikanth1096@gmail.com",
+    image: null,
   },
   {
-    name: " I Manoj kumar",
+    name: "I Manoj kumar",
     role: "Event Coordinator",
     phone: "+91 9963441830",
     email: "maniitha7@gmail.com",
+    image: "/manoj.jpeg",
+  },
+]
+
+const facultyCoordinators = [
+  {
+    name: "Faculty Coordinator",
+    role: "Faculty Coordinator — Dept. of ACSE",
+    phone: "XXXXX",
+    email: "XXXXX",
+    image: null,
+  },
+  {
+    name: "Abhinav Adarsh",
+    role: "Faculty Coordinator — Dept. of ACSE",
+    phone: "XXXXX",
+    email: "XXXXX",
+    image: null,
   },
 ]
 
 export function Contact() {
   return (
     <section id="contact" className="py-24 md:py-32 relative">
-      {/* Background accent */}
-    
-
       <div className="container mx-auto px-4 md:px-6 relative">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -57,30 +73,34 @@ export function Contact() {
             </div>
           </div>
 
-          {/* Organizers Grid */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {organizers.map((organizer, index) => (
-              <div
-                key={organizer.email}
-                className="glass-card glass-hover rounded-2xl p-8"
-              >
+          {/* Student Coordinators */}
+          <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">
+            Student Coordinators
+          </p>
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
+            {organizers.map((organizer) => (
+              <div key={organizer.email} className="glass-card glass-hover rounded-2xl p-8">
                 <div className="mb-6">
-                  {/* Avatar placeholder */}
-                  <div className="w-16 h-16 rounded-full bg-muted/30 flex items-center justify-center mb-4">
-                    <span className="text-foreground font-display text-xl font-semibold">
-                      {organizer.name.charAt(0)}
-                    </span>
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-muted/30 flex items-center justify-center mb-4">
+                    {organizer.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={organizer.image}
+                        alt={organizer.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    ) : (
+                      <span className={`text-foreground font-display font-semibold ${organizer.name === "L Shashikanth Reddy" ? "text-sm leading-tight text-center" : "text-xl"}`}>
+                        {organizer.name === "L Shashikanth Reddy" ? "東京" : organizer.name.trim().charAt(0)}
+                      </span>
+                    )}
                   </div>
                   <h3 className="font-display text-xl font-semibold text-foreground">
                     {organizer.name}
                   </h3>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    {organizer.role}
-                  </p>
+                  <p className="text-muted-foreground text-sm mt-1">{organizer.role}</p>
                 </div>
-
                 <div className="space-y-4">
-                  {/* Phone */}
                   <a
                     href={`tel:${organizer.phone.replace(/\s/g, "")}`}
                     className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
@@ -90,8 +110,6 @@ export function Contact() {
                     </div>
                     <span className="text-sm">{organizer.phone}</span>
                   </a>
-
-                  {/* Email */}
                   <a
                     href={`mailto:${organizer.email}`}
                     className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
@@ -106,14 +124,54 @@ export function Contact() {
             ))}
           </div>
 
+          {/* Faculty Coordinators */}
+          <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4">
+            Faculty Coordinators
+          </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {facultyCoordinators.map((faculty) => (
+              <div key={faculty.name} className="glass-card glass-hover rounded-2xl p-8">
+                <div className="mb-6">
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-muted/30 flex items-center justify-center mb-4">
+                    {faculty.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={faculty.image}
+                        alt={faculty.name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    ) : (
+                      <GraduationCap className="h-7 w-7 text-foreground/60" />
+                    )}
+                  </div>
+                  <h3 className="font-display text-xl font-semibold text-foreground">
+                    {faculty.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mt-1">{faculty.role}</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                    <div className="p-2 rounded-lg bg-foreground/5">
+                      <Phone className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm">{faculty.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                    <div className="p-2 rounded-lg bg-foreground/5">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm">{faculty.email}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Additional Info */}
           <div className="text-center mt-12">
             <p className="text-muted-foreground text-sm">
               For general inquiries, email us at{" "}
-              <a
-                href="mailto:info@trinexia.com"
-                className="text-foreground hover:underline"
-              >
+              <a href="mailto:info@trinexia.com" className="text-foreground hover:underline">
                 info@trinexia.com
               </a>
             </p>

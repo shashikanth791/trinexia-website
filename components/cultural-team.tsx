@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Music, Mic, Gamepad2, Sparkles, Users, X, Phone } from "lucide-react"
 
 const mainCoordinators = [
-  { name: "K. Mythili Reddy", role: "Main Student Coordinator", phone: "XXXX-XXX-XXX" },
+  { name: "K. Mythili Reddy", role: "Main Student Coordinator", phone: "9392389134" },
   { name: "M. Charitha", role: "Main Student Coordinator", phone: "XXXX-XXX-XXX" },
 ]
 
@@ -13,14 +13,16 @@ const eventTeams = [
     event: "Singing",
     icon: Mic,
     description: "Showcase your vocal talent in solo or group performances. From classical to contemporary, all genres welcome.",
-    members: [{ name: "A. Niharika", phone: "XXXX-XXX-XXX" }],
+    members: [
+      { name: "Anumula Niharika", phone: "8008801865" },
+    ],
   },
   {
     event: "Dance",
     icon: Music,
     description: "Express yourself through movement. Compete in solo or group dance across classical, folk, and freestyle categories.",
     members: [
-      { name: "G. Sahasra", phone: "XXXX-XXX-XXX" },
+      { name: "G. Sahasra Reddy", phone: "9154271223" },
       { name: "P. Sai Yasasri", phone: "XXXX-XXX-XXX" },
     ],
   },
@@ -29,9 +31,8 @@ const eventTeams = [
     icon: Gamepad2,
     description: "Battle it out in exciting gaming tournaments. Test your reflexes, strategy, and teamwork across multiple titles.",
     members: [
-      { name: "Abhiram", phone: "XXXX-XXX-XXX" },
-      { name: "Ravi", phone: "XXXX-XXX-XXX" },
-      { name: "Vedasri", phone: "XXXX-XXX-XXX" },
+      
+      { name: "K. Abhiram", phone: "9948496025" },
     ],
   },
   {
@@ -40,7 +41,7 @@ const eventTeams = [
     description: "The creative minds behind the visual magic of TriNexia 2026 — transforming spaces into stunning experiences.",
     members: [
       { name: "Aishwarya", phone: "XXXX-XXX-XXX" },
-      { name: "Deepika", phone: "XXXX-XXX-XXX" },
+      { name: "Deepika", phone: "8639031179" },
     ],
   },
 ]
@@ -129,7 +130,7 @@ export function CulturalTeam() {
                     <h4 className="font-display font-bold text-white text-lg">{team.event}</h4>
                   </div>
                   <div className="flex flex-col gap-3">
-                    {team.members.map((member) => (
+                    {team.members.slice(0, 3).map((member) => (
                       <div key={member.name} className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                           <span className="text-white/70 text-xs font-medium">{member.name.charAt(0)}</span>
@@ -137,6 +138,9 @@ export function CulturalTeam() {
                         <span className="text-white/65 text-sm">{member.name}</span>
                       </div>
                     ))}
+                    {team.members.length > 3 && (
+                      <p className="text-white/35 text-xs mt-1">+{team.members.length - 3} more — tap to see all</p>
+                    )}
                   </div>
                 </button>
               )
@@ -164,7 +168,6 @@ export function CulturalTeam() {
               <X className="h-5 w-5" />
             </button>
 
-            {/* Avatar */}
             <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-5">
               <span className="text-white font-display font-bold text-2xl">
                 {selectedCoordinator.name.charAt(0)}
@@ -199,7 +202,7 @@ export function CulturalTeam() {
           onClick={() => setSelectedEvent(null)}
         >
           <div
-            className="relative w-full max-w-md rounded-2xl p-8 border border-white/15 bg-white/8 backdrop-blur-xl"
+            className="relative w-full max-w-md rounded-2xl p-8 border border-white/15 bg-white/8 backdrop-blur-xl max-h-[85vh] overflow-y-auto"
             style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 24px 64px rgba(0,0,0,0.6)" }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -218,14 +221,15 @@ export function CulturalTeam() {
               <h3 className="font-display text-2xl font-bold text-white">{selectedEvent.event}</h3>
             </div>
 
-            {/* Description */}
             <p className="text-white/55 text-sm leading-relaxed mb-6">
               {selectedEvent.description}
             </p>
 
             {/* Coordinators */}
             <div className="border-t border-white/10 pt-5">
-              <p className="text-xs text-white/35 uppercase tracking-widest mb-4">Coordinators</p>
+              <p className="text-xs text-white/35 uppercase tracking-widest mb-4">
+                Coordinators ({selectedEvent.members.length})
+              </p>
               <div className="flex flex-col gap-3">
                 {selectedEvent.members.map((member) => (
                   <div key={member.name} className="flex items-center justify-between">

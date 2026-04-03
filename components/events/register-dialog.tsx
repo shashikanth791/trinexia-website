@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2, Loader2 } from "lucide-react"
 import type { Event } from "./event-data"
 
-const SHEETS_SCRIPT_URL = "YOUR_SCRIPT_URL"
 
 interface TeamMember {
   name: string
@@ -87,13 +86,17 @@ export function RegisterDialog({ event, open, onClose }: any) {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!event) return
+  e.preventDefault()
+  if (!event) return
 
-    setStatus("loading")
+  setStatus("loading")
+  setErrorMsg("")
 
-    try {
-      const params = new URLSearchParams({
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         name: form.name,
         regno: form.regno,
         section: form.section,
@@ -104,15 +107,25 @@ export function RegisterDialog({ event, open, onClose }: any) {
           .join(", "),
         upiRef: isGamingEvent(event) ? form.upiRef : "",
         eventName: event.name,
-      })
+      }),
+    })
 
-      await fetch(`${SHEETS_SCRIPT_URL}?${params.toString()}`)
-      setStatus("success")
-    } catch {
+    const data = await res.json()
+
+    if (res.status === 409) {
       setStatus("error")
-      setErrorMsg("Submission failed")
+      setErrorMsg("⚠️ You are already registered for this event!")
+    } else if (res.ok) {
+      setStatus("success")
+    } else {
+      setStatus("error")
+      setErrorMsg(data.error || "Submission failed, please try again")
     }
+  } catch {
+    setStatus("error")
+    setErrorMsg("Network error. Check your connection and try again.")
   }
+}
 
   if (!event) return null
   const teamConfig = getTeamConfig(event)

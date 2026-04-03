@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Phone, GraduationCap, BookOpen, X } from "lucide-react"
+import { Phone, GraduationCap, BookOpen } from "lucide-react"
 import type { Event } from "./event-data"
 
 interface EventDialogProps {
@@ -39,17 +39,9 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
 
         {showQuery ? (
           <div className="space-y-5">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold text-foreground">
-                Contact Coordinators
-              </h3>
-              <button
-                onClick={() => setShowQuery(false)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+            <h3 className="font-display text-lg font-semibold text-foreground">
+              Contact Coordinators
+            </h3>
 
             <p className="text-sm text-muted-foreground">
               Have a query about{" "}

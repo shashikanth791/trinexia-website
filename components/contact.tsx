@@ -24,14 +24,12 @@ const facultyCoordinators = [
     name: "Faculty Coordinator",
     role: "Faculty Coordinator — Dept. of ACSE",
     phone: "XXXXX",
-    email: "XXXXX",
     image: null,
   },
   {
     name: "Abhinav Adarsh",
     role: "Faculty Coordinator — Dept. of ACSE",
-    phone: "XXXXX",
-    email: "XXXXX",
+    phone: "9140221382",
     image: null,
   },
 ]

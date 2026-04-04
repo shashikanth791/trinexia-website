@@ -32,7 +32,7 @@ const eventTeams = [
     description: "Battle it out in exciting gaming tournaments. Test your reflexes, strategy, and teamwork across multiple titles.",
     members: [
       
-      { name: "K. Abhiram", phone: "9948496025" },
+      { name: "K. Abhiram", phone: "(7660046998)" },
     ],
   },
   {

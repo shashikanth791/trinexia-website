@@ -23,6 +23,7 @@ interface FormState {
   section: string
   phone: string
   members: Member[]
+  upiRef: string // ✅ ADDED
 }
 
 function getTeamConfig(event: Event) {
@@ -46,12 +47,14 @@ const inputStyle =
 
 export function RegisterDialog({ event, open, onClose }: any) {
   const [form, setForm] = useState<FormState>({
-    name: "", regno: "", section: "", phone: "", members: [],
+    name: "", regno: "", section: "", phone: "", members: [], upiRef: "",
   })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
   const [regId, setRegId] = useState("")
   const [copied, setCopied] = useState(false)
+
+  const isDebugging = event?.id === "debugging" // ✅ ADDED
 
   useEffect(() => {
     if (open && event) {
@@ -59,6 +62,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
       setForm({
         name: "", regno: "", section: "", phone: "",
         members: Array.from({ length: config.total - 1 }, () => ({ name: "", regno: "" })),
+        upiRef: "", // ✅ RESET
       })
       setStatus("idle")
       setErrorMsg("")
@@ -89,6 +93,13 @@ export function RegisterDialog({ event, open, onClose }: any) {
       return
     }
 
+    // ✅ VALIDATION FOR UTR
+    if (isDebugging && !form.upiRef.trim()) {
+      setStatus("error")
+      setErrorMsg("UTR is required for Debugging event")
+      return
+    }
+
     for (let i = 0; i < config.required - 1; i++) {
       if (!form.members[i]?.name || !form.members[i]?.regno) {
         setStatus("error")
@@ -115,7 +126,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
           section: form.section,
           phone: form.phone,
           teamMembers,
-          upiRef: "",
+          upiRef: form.upiRef, // ✅ SEND UTR
           eventName: event.scriptName,
         }),
       })
@@ -162,26 +173,10 @@ export function RegisterDialog({ event, open, onClose }: any) {
 
               <div className="bg-white/10 border border-white/20 rounded-xl p-4 space-y-2">
                 <p className="text-white/60 text-xs uppercase tracking-wider">Your Registration ID</p>
-                <div className="flex items-center justify-center gap-3">
-                  <span className="text-white text-xl font-mono font-bold tracking-widest">
-                    {regId}
-                  </span>
-                  <button
-                    onClick={copyId}
-                    className="text-white/60 hover:text-white transition-colors"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                </div>
-                <p className="text-white/50 text-xs">Save this ID for future reference</p>
+                <span className="text-white text-xl font-mono font-bold tracking-widest">
+                  {regId}
+                </span>
               </div>
-
-              <Button
-                onClick={onClose}
-                className="w-full rounded-xl bg-white text-black hover:bg-white/90"
-              >
-                Done
-              </Button>
             </div>
 
           ) : (
@@ -201,6 +196,16 @@ export function RegisterDialog({ event, open, onClose }: any) {
               <input className={inputStyle} placeholder="Phone *"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+
+              {/* 🔥 UTR FIELD ADDED HERE */}
+              {isDebugging && (
+                <input
+                  className={inputStyle}
+                  placeholder="UTR Number *"
+                  value={form.upiRef}
+                  onChange={(e) => setForm({ ...form, upiRef: e.target.value })}
+                />
+              )}
 
               {form.members.map((m, i) => (
                 <div key={i} className="space-y-2">
@@ -224,14 +229,8 @@ export function RegisterDialog({ event, open, onClose }: any) {
 
         {status !== "success" && (
           <div className="pt-4">
-            <Button
-              onClick={handleSubmit}
-              disabled={status === "loading"}
-              className="w-full rounded-xl py-3 text-base font-medium bg-white text-black hover:bg-white/90 disabled:opacity-50"
-            >
-              {status === "loading"
-                ? <Loader2 className="animate-spin mx-auto" />
-                : "Submit"}
+            <Button onClick={handleSubmit} className="w-full">
+              {status === "loading" ? <Loader2 className="animate-spin mx-auto" /> : "Submit"}
             </Button>
           </div>
         )}

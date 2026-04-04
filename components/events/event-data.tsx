@@ -16,6 +16,8 @@ export interface Event {
   description: string
   icon: ElementType
   category: "technical" | "gaming"
+  paid: boolean
+  fee: number
   details: {
     fullDescription: string
     teamSize: string
@@ -38,6 +40,8 @@ export const events: Event[] = [
     description: "Find and fix bugs in complex code snippets within the time limit.",
     icon: Bug,
     category: "technical",
+    paid: true,
+    fee: 50,
     details: {
       fullDescription:
         "Participants will debug code snippets in multiple languages within a time limit.",
@@ -67,6 +71,8 @@ export const events: Event[] = [
     description: "Pitch innovative ideas to solve real-world problems.",
     icon: Lightbulb,
     category: "technical",
+    paid: false,
+    fee: 0,
     details: {
       fullDescription:
         "Present innovative solutions to real-world problems with impact and feasibility.",
@@ -81,7 +87,7 @@ export const events: Event[] = [
         "Only one laptop is allowed per team",
       ],
       dateVenue: "Day 2 — Innovation Hub",
-      entryFee: "₹200 per team",
+      entryFee: "FREE",
     },
     coordinators: [],
   },
@@ -96,6 +102,8 @@ export const events: Event[] = [
     description: "Fast-paced technical quiz where teams answer under pressure.",
     icon: Zap,
     category: "technical",
+    paid: false,
+    fee: 0,
     details: {
       fullDescription:
         "A high-speed quiz challenge where teams must think fast and respond instantly under pressure.",
@@ -111,7 +119,7 @@ export const events: Event[] = [
         "Judges' decision will be final and binding",
       ],
       dateVenue: "Day 1 — Innovation Hub",
-      entryFee: "₹100 per team",
+      entryFee: "FREE",
     },
     coordinators: [],
   },
@@ -125,6 +133,8 @@ export const events: Event[] = [
     description: "Battle in BGMI tournament.",
     icon: Gamepad2,
     category: "gaming",
+    paid: true,
+    fee: 100,
     details: {
       fullDescription:
         "Squad-based BGMI tournament with placement and kill-based scoring.",
@@ -151,6 +161,8 @@ export const events: Event[] = [
     description: "Compete in Free Fire MAX.",
     icon: Flame,
     category: "gaming",
+    paid: true,
+    fee: 100,
     details: {
       fullDescription:
         "Fast-paced Free Fire MAX tournament with squad gameplay.",

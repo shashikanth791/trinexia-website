@@ -26,14 +26,12 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
 
   const Icon = event.icon
 
-  // ✅ FIXED (NO MORE ID ISSUES)
   const requiresPayment =
     event.name.toLowerCase().includes("debug") ||
     event.name.toLowerCase().includes("bgmi") ||
     event.name.toLowerCase().includes("free")
 
   const studentCoords = event.coordinators.filter((c) => c.role === "student")
-  const facultyCoords = event.coordinators.filter((c) => c.role === "faculty")
 
   function handleRegisterClick(e: React.MouseEvent) {
     e.stopPropagation()
@@ -57,11 +55,6 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             <h3 className="font-display text-lg font-semibold text-foreground">
               Contact Coordinators
             </h3>
-
-            <p className="text-sm text-muted-foreground">
-              Have a query about{" "}
-              <span className="text-foreground font-medium">{event.name}</span>?
-            </p>
 
             {studentCoords.map((c) => (
               <div key={c.name} className="glass-card rounded-lg p-4 flex items-center justify-between">
@@ -118,7 +111,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 </button>
               </div>
 
-              {/* 🔥 QR BLOCK (WORKING) */}
+              {/* 🔥 QR BLOCK WITH FEE */}
               {requiresPayment && (
                 <div className="flex justify-center">
                   <div className="glass-card rounded-2xl p-6 text-center border border-white/10">
@@ -131,6 +124,10 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
 
                     <p className="text-purple-400 font-medium">
                       Scan & Pay Entry Fee
+                    </p>
+
+                    <p className="text-white text-base font-bold mt-1">
+                      ₹50 / participant
                     </p>
 
                     <p className="text-white/50 text-xs mt-1">

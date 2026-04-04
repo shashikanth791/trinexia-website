@@ -10,7 +10,9 @@ export interface Coordinator {
 export interface Event {
   id: string
   name: string
-  scriptName: string // 🔥 added for backend mapping
+  scriptName: string
+  image: string
+  imagePosition?: string
   description: string
   icon: ElementType
   category: "technical" | "gaming"
@@ -30,89 +32,96 @@ export const events: Event[] = [
     id: "debugging",
     name: "Debugging",
     scriptName: "Debugging",
+    image:
+      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80&auto=format&fit=crop",
+    imagePosition: "center",
     description: "Find and fix bugs in complex code snippets within the time limit.",
     icon: Bug,
     category: "technical",
     details: {
       fullDescription:
         "Participants will debug code snippets in multiple languages within a time limit.",
-      teamSize: "Individual or Duo",
-      maxTeamMembers: 2,
+      teamSize: "Individual",
+      maxTeamMembers: 1,
       rules: [
-        "Time limit: 90 minutes",
-        "Multiple programming languages involved",
-        "Partial marks for identifying bugs",
-        "Full marks for fixing bugs correctly",
+        "Individual event with 3 elimination rounds (Easy, Medium, Hard); participants shortlisted after each round",
+        "Only C and Python are allowed; code must compile, run, and produce correct output",
+        "Strict no external assistance — no internet, mobile phones, smart devices, notes, or communication",
+        "Use only provided systems; external devices (USB, etc.) are not permitted",
+        "Scoring: full marks for correct solutions, partial for partial code; tie-breaker = faster submission",
+        "Time limits: Easy (25 min), Medium (45 min), Hard (60 min); no extra time",
+        "Only coordinators for doubts (no hints); cheating leads to disqualification; judges' decision is final",
       ],
       dateVenue: "Computer Lab 1",
-      entryFee: "₹100 per team",
+      entryFee: "₹100 per participant",
     },
-    coordinators: [
-      { name: "Sk. Seema", phone: "8341831466", role: "student" },
-      { name: "Kaduduri Abhiram", phone: "9948496025", role: "student" },
-      { name: "Ms. Beulah", phone: "9494490362", role: "faculty" },
-    ],
+    coordinators: [],
   },
 
   {
     id: "ideathon",
     name: "Ideathon",
     scriptName: "Ideathon",
+    image: "/ideathon.jpg",
+    imagePosition: "center",
     description: "Pitch innovative ideas to solve real-world problems.",
     icon: Lightbulb,
     category: "technical",
     details: {
       fullDescription:
         "Present innovative solutions to real-world problems with impact and feasibility.",
-      teamSize: "3 participants",
+      teamSize: "3 Participants",
       maxTeamMembers: 3,
       rules: [
-        "3 minutes presentation",
-        "1 minute Q&A",
-        "Must include problem, solution, and impact",
-        "One laptop per team",
+        "Team size: maximum 3 participants",
+        "Each team gets 3 minutes to present their idea",
+        "Judges will have 1 minute for questions",
+        "Presentation must include: Problem, Solution, and Impact",
+        "Teams must complete within the allotted time",
+        "Only one laptop is allowed per team",
       ],
       dateVenue: "Day 2 — Innovation Hub",
       entryFee: "₹200 per team",
     },
-    coordinators: [
-      { name: "B. Karuna", phone: "8919708414", role: "student" },
-      { name: "Mr. Veeraiah", phone: "9848405892", role: "faculty" },
-    ],
+    coordinators: [],
   },
 
   {
     id: "tech-rapid-fire",
-    name: "Tech Rapid Fire",
+    name: "TechPulse: Rapid Fire Challenge",
     scriptName: "Tech Rapid Fire",
-    description: "Answer rapid-fire tech questions.",
+    image:
+      "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=1200&q=80&auto=format&fit=crop",
+    imagePosition: "center",
+    description: "Fast-paced technical quiz where teams answer under pressure.",
     icon: Zap,
     category: "technical",
     details: {
       fullDescription:
-        "Fast-paced technical quiz where teams answer quickly under pressure.",
+        "A high-speed quiz challenge where teams must think fast and respond instantly under pressure.",
       teamSize: "2–3 Participants",
       maxTeamMembers: 3,
       rules: [
-        "Answer within 5 seconds",
-        "Say 'Pass' to skip",
-        "No negative marking",
-        "Each correct answer = 1 point",
-        "Highest score wins",
+        "Team size: 2–3 participants",
+        "Each team gets limited time per round (30–60 seconds total)",
+        "Questions are asked in rapid succession; answer within 5 seconds",
+        "Say 'Pass' to skip; skipped questions will not be repeated",
+        "Scoring: +1 for each correct answer, no negative marking",
+        "Team with highest score wins",
+        "Judges' decision will be final and binding",
       ],
       dateVenue: "Day 1 — Innovation Hub",
       entryFee: "₹100 per team",
     },
-    coordinators: [
-      { name: "G. Bhavana", phone: "9705572426", role: "student" },
-      { name: "Mr. T. Ashok", phone: "7793958030", role: "faculty" },
-    ],
+    coordinators: [],
   },
 
   {
     id: "bgmi",
     name: "BGMI Tournament",
     scriptName: "BGMI Tournament",
+    image: "/bgmi.jpg",
+    imagePosition: "center",
     description: "Battle in BGMI tournament.",
     icon: Gamepad2,
     category: "gaming",
@@ -130,16 +139,15 @@ export const events: Event[] = [
       dateVenue: "Computer Lab 212",
       entryFee: "₹100 per team",
     },
-    coordinators: [
-      { name: "P. Sathwik", phone: "9100411088", role: "student" },
-      { name: "Ms. Prashanthi", phone: "9346062386", role: "faculty" },
-    ],
+    coordinators: [],
   },
 
   {
     id: "free-fire",
     name: "Free Fire MAX",
     scriptName: "Free Fire MAX",
+    image: "/freefire.jpg",
+    imagePosition: "center",
     description: "Compete in Free Fire MAX.",
     icon: Flame,
     category: "gaming",
@@ -152,14 +160,10 @@ export const events: Event[] = [
         "Bermuda map",
         "Top teams qualify",
         "No third-party apps",
-        "All players must be present",
       ],
       dateVenue: "Computer Lab 212",
       entryFee: "₹100 per team",
     },
-    coordinators: [
-      { name: "L. Shashikanth Reddy", phone: "9989646524", role: "student" },
-      { name: "Ms. Prashanthi", phone: "9346062386", role: "faculty" },
-    ],
+    coordinators: [],
   },
 ]

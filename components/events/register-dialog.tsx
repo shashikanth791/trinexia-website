@@ -22,12 +22,7 @@ interface FormState {
   regno: string
   section: string
   phone: string
-  upiRef: string
   members: Member[]
-}
-
-function isGamingEvent(event: Event) {
-  return event.category === "gaming"
 }
 
 function getTeamConfig(event: Event) {
@@ -51,7 +46,7 @@ const inputStyle =
 
 export function RegisterDialog({ event, open, onClose }: any) {
   const [form, setForm] = useState<FormState>({
-    name: "", regno: "", section: "", phone: "", upiRef: "", members: [],
+    name: "", regno: "", section: "", phone: "", members: [],
   })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMsg, setErrorMsg] = useState("")
@@ -62,7 +57,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
     if (open && event) {
       const config = getTeamConfig(event)
       setForm({
-        name: "", regno: "", section: "", phone: "", upiRef: "",
+        name: "", regno: "", section: "", phone: "",
         members: Array.from({ length: config.total - 1 }, () => ({ name: "", regno: "" })),
       })
       setStatus("idle")
@@ -100,72 +95,6 @@ export function RegisterDialog({ event, open, onClose }: any) {
         setErrorMsg(`Please fill Member ${i + 2} details`)
         return
       }
-    }async function handleSubmit() {
-  if (!event) return
-  const config = getTeamConfig(event)
-
-  if (!form.name || !form.regno || !form.section || !form.phone) {
-    setStatus("error")
-    setErrorMsg("Please fill all required fields")
-    return
-  }
-
-  for (let i = 0; i < config.required - 1; i++) {
-    if (!form.members[i]?.name || !form.members[i]?.regno) {
-      setStatus("error")
-      setErrorMsg(`Please fill Member ${i + 2} details`)
-      return
-    }
-  }
-
-  if (isGamingEvent(event) && !form.upiRef) {
-    setStatus("error")
-    setErrorMsg("Please enter UPI Transaction ID")
-    return
-  }
-
-  setStatus("loading")
-  setErrorMsg("")
-
-  try {
-    const teamMembers = form.members
-      .filter((m) => m.name.trim() !== "")
-      .map((m) => `${m.name} (${m.regno})`)
-      .join(", ")
-
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: form.name,
-        regno: form.regno,
-        section: form.section,
-        phone: form.phone,
-        teamMembers,
-        upiRef: isGamingEvent(event) ? form.upiRef : "",
-        eventName: event.scriptName,
-      }),
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      setRegId(data.registrationId)
-      setStatus("success")
-    } else {
-      setStatus("error")
-      setErrorMsg(data.error || "Submission failed, please try again")
-    }
-  } catch {
-    setStatus("error")
-    setErrorMsg("Network error. Check your connection and try again.")
-  }
-}
-
-    if (isGamingEvent(event) && !form.upiRef) {
-      setStatus("error")
-      setErrorMsg("Please enter UPI Transaction ID")
-      return
     }
 
     setStatus("loading")
@@ -186,7 +115,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
           section: form.section,
           phone: form.phone,
           teamMembers,
-          upiRef: isGamingEvent(event) ? form.upiRef : "",
+          upiRef: "",
           eventName: event.scriptName,
         }),
       })
@@ -220,7 +149,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
             Register — {event.name}
           </DialogTitle>
           <DialogDescription className="text-white/60">
-            {isGamingEvent(event) ? `Entry fee: ${event.details.entryFee}` : "Free Registration"}
+            Fill in your details to register for this event.
           </DialogDescription>
         </DialogHeader>
 
@@ -230,8 +159,7 @@ export function RegisterDialog({ event, open, onClose }: any) {
             <div className="text-center py-8 space-y-4">
               <CheckCircle2 className="h-12 w-12 text-green-400 mx-auto" />
               <p className="text-white text-base font-medium">Registration Successful!</p>
-              
-              {/* UNIQUE ID DISPLAY */}
+
               <div className="bg-white/10 border border-white/20 rounded-xl p-4 space-y-2">
                 <p className="text-white/60 text-xs uppercase tracking-wider">Your Registration ID</p>
                 <div className="flex items-center justify-center gap-3">
@@ -286,13 +214,6 @@ export function RegisterDialog({ event, open, onClose }: any) {
                     onChange={(e) => updateMember(i, "regno", e.target.value)} />
                 </div>
               ))}
-
-              {isGamingEvent(event) && (
-                <input className={inputStyle}
-                  placeholder="UPI Transaction ID *"
-                  value={form.upiRef}
-                  onChange={(e) => setForm({ ...form, upiRef: e.target.value })} />
-              )}
 
               {status === "error" && (
                 <p className="text-red-400 text-sm">{errorMsg}</p>

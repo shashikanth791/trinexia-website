@@ -19,12 +19,15 @@ interface EventDialogProps {
   onRegister: () => void
 }
 
+const ESPORTS_IDS = ["bgmi", "free-fire"]
+
 export function EventDialog({ event, open, onClose, onRegister }: EventDialogProps) {
   const [showQuery, setShowQuery] = useState(false)
 
   if (!event) return null
 
   const Icon = event.icon
+  const isEsports = ESPORTS_IDS.includes(event.id)
   const studentCoords = event.coordinators.filter((c) => c.role === "student")
   const facultyCoords = event.coordinators.filter((c) => c.role === "faculty")
 
@@ -63,10 +66,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                       <p className="text-foreground font-medium text-sm">{c.name}</p>
                       <p className="text-muted-foreground text-xs mt-0.5">{c.phone}</p>
                     </div>
-                    <a
-                      href={"tel:" + c.phone}
-                      className="flex items-center gap-1.5 text-xs bg-foreground/10 hover:bg-foreground/20 text-foreground px-3 py-1.5 rounded-lg transition-colors"
-                    >
+                    <a href={"tel:" + c.phone} className="flex items-center gap-1.5 text-xs bg-foreground/10 hover:bg-foreground/20 text-foreground px-3 py-1.5 rounded-lg transition-colors">
                       <Phone className="h-3 w-3" />
                       Call
                     </a>
@@ -89,10 +89,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                       <p className="text-foreground font-medium text-sm">{c.name}</p>
                       <p className="text-muted-foreground text-xs mt-0.5">{c.phone}</p>
                     </div>
-                    <a
-                      href={"tel:" + c.phone}
-                      className="flex items-center gap-1.5 text-xs bg-foreground/10 hover:bg-foreground/20 text-foreground px-3 py-1.5 rounded-lg transition-colors"
-                    >
+                    <a href={"tel:" + c.phone} className="flex items-center gap-1.5 text-xs bg-foreground/10 hover:bg-foreground/20 text-foreground px-3 py-1.5 rounded-lg transition-colors">
                       <Phone className="h-3 w-3" />
                       Call
                     </a>
@@ -101,11 +98,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
               </div>
             )}
 
-            <Button
-              variant="outline"
-              className="w-full border-foreground/20 text-foreground hover:bg-foreground/5"
-              onClick={() => setShowQuery(false)}
-            >
+            <Button variant="outline" className="w-full border-foreground/20 text-foreground hover:bg-foreground/5" onClick={() => setShowQuery(false)}>
               Back to Event Details
             </Button>
           </div>
@@ -123,50 +116,28 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
             </DialogHeader>
 
             <div className="space-y-6 mt-4">
-
               <div className="grid grid-cols-2 gap-4">
                 <div className="glass-card rounded-lg p-4">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Team Size
-                  </span>
-                  <p className="text-foreground font-medium mt-1">
-                    {event.details.teamSize}
-                  </p>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Team Size</span>
+                  <p className="text-foreground font-medium mt-1">{event.details.teamSize}</p>
                 </div>
-                <button
-                  onClick={() => setShowQuery(true)}
-                  className="glass-card rounded-lg p-4 text-left hover:bg-foreground/5 transition-colors group"
-                >
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Have a Query?
-                  </span>
-                  <p className="text-accent font-medium mt-1 group-hover:underline text-sm">
-                    Contact Coordinators {'>'}
-                  </p>
+                <button onClick={() => setShowQuery(true)} className="glass-card rounded-lg p-4 text-left hover:bg-foreground/5 transition-colors group">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Have a Query?</span>
+                  <p className="text-accent font-medium mt-1 group-hover:underline text-sm">Contact Coordinators</p>
                 </button>
               </div>
 
-              {/* Entry fee ONLY for gaming */}
-              {event.category === "gaming" && (
+              {!isEsports && event.category === "gaming" && (
                 <div className="glass-card rounded-lg p-4">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Entry Fee
-                  </span>
-                  <p className="text-foreground font-medium mt-1">
-                    {event.details.entryFee}
-                  </p>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Entry Fee</span>
+                  <p className="text-foreground font-medium mt-1">{event.details.entryFee}</p>
                 </div>
               )}
 
-              {/* Date & Venue ONLY for gaming */}
-              {event.category === "gaming" && (
+              {!isEsports && event.category === "gaming" && (
                 <div className="glass-card rounded-lg p-4">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Date & Venue
-                  </span>
-                  <p className="text-foreground font-medium mt-1">
-                    {event.details.dateVenue}
-                  </p>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Date & Venue</span>
+                  <p className="text-foreground font-medium mt-1">{event.details.dateVenue}</p>
                 </div>
               )}
 
@@ -174,10 +145,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 <span className="text-sm font-medium text-foreground">Rules</span>
                 <ul className="mt-3 space-y-2">
                   {event.details.rules.map((rule, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 text-sm text-muted-foreground"
-                    >
+                    <li key={index} className="flex items-start gap-3 text-sm text-muted-foreground">
                       <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
                       {rule}
                     </li>
@@ -185,10 +153,7 @@ export function EventDialog({ event, open, onClose, onRegister }: EventDialogPro
                 </ul>
               </div>
 
-              <Button
-                className="w-full bg-foreground text-background hover:bg-foreground/90"
-                onClick={handleRegisterClick}
-              >
+              <Button className="w-full bg-foreground text-background hover:bg-foreground/90" onClick={handleRegisterClick}>
                 Register for this Event
               </Button>
             </div>

@@ -68,7 +68,9 @@ export function Hero() {
           {/* Notice */}
           <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full mb-6 transition-all duration-700 delay-150 border border-white/10 bg-white/5 backdrop-blur-md ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <span className="text-sm md:text-base text-white/70 tracking-wide">
-              Each participant can register for only one event
+              Each participant may register for only one event.
+               If multiple registrations are made, only one will be considered.
+
             </span>
           </div>
 
